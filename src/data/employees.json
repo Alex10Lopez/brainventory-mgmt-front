@@ -1,0 +1,607 @@
+[
+    {
+        "id": 1,
+        "name": "Hiroshi",
+        "lastname": "Tanaka",
+        "dateOfBirth": "1985-06-15",
+        "sex": "MALE",
+        "nationality": "Japanese",
+        "permissions": "GLOBAL_ADMIN",
+        "jobRoles": [
+            {
+                "id": 1,
+                "name": "CEO"
+            }
+        ],
+        "status": "ACTIVE",
+        "salary": 7500.00,
+        "contacts": [
+            {
+                "id": 1,
+                "phoneNumber": "+81-90-1234-5678",
+                "email": "hiroshi.tanaka@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 2,
+        "name": "Aisha",
+        "lastname": "Mohamed",
+        "dateOfBirth": "1990-09-20",
+        "sex": "FEMALE",
+        "nationality": "Egyptian",
+        "permissions": "HR_ADMIN",
+        "jobRoles": [],
+        "status": "ON_VACATION",
+        "salary": 5200.00,
+        "contacts": [
+            {
+                "id": 2,
+                "phoneNumber": "+20-100-567-8901",
+                "email": "aisha.mohamed@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 3,
+        "name": "Carlos",
+        "lastname": "Fernández",
+        "dateOfBirth": "1982-03-10",
+        "sex": "MALE",
+        "nationality": "Argentinian",
+        "permissions": "ASSETS_ADMIN",
+        "jobRoles": [],
+        "status": "ACTIVE",
+        "salary": 6100.00,
+        "contacts": [
+            {
+                "id": 3,
+                "phoneNumber": "+54-9-11-2233-4455",
+                "email": "carlos.fernandez@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 4,
+        "name": "Amara",
+        "lastname": "Diallo",
+        "dateOfBirth": "1995-07-25",
+        "sex": "FEMALE",
+        "nationality": "Senegalese",
+        "permissions": "INFRASTRUCTURE_ADMIN",
+        "jobRoles": [],
+        "status": "TRAINING",
+        "salary": 3200.00,
+        "contacts": [
+            {
+                "id": 4,
+                "phoneNumber": "+221-77-123-4567",
+                "email": "amara.diallo@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 5,
+        "name": "Dmitry",
+        "lastname": "Ivanov",
+        "dateOfBirth": "1988-12-05",
+        "sex": "MALE",
+        "nationality": "Russian",
+        "permissions": "INFRASTRUCTURE_ADMIN",
+        "jobRoles": [],
+        "status": "PROBATION",
+        "salary": 6800.00,
+        "contacts": [
+            {
+                "id": 5,
+                "phoneNumber": "+7-916-987-6543",
+                "email": "dmitry.ivanov@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 6,
+        "name": "Sophia",
+        "lastname": "Schmidt",
+        "dateOfBirth": "1993-04-18",
+        "sex": "FEMALE",
+        "nationality": "German",
+        "permissions": "HR_ADMIN",
+        "jobRoles": [],
+        "status": "CONTRACT",
+        "salary": 4300.00,
+        "contacts": [
+            {
+                "id": 6,
+                "phoneNumber": "+49-152-0987-6543",
+                "email": "sophia.schmidt@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 7,
+        "name": "Mohammed",
+        "lastname": "Khan",
+        "dateOfBirth": "1979-08-30",
+        "sex": "MALE",
+        "nationality": "Pakistani",
+        "permissions": "ASSETS_ADMIN",
+        "jobRoles": [],
+        "status": "TEMPORARY",
+        "salary": 5700.00,
+        "contacts": [
+            {
+                "id": 7,
+                "phoneNumber": "+92-300-987-6543",
+                "email": "mohammed.khan@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 8,
+        "name": "Isabelle",
+        "lastname": "Dupont",
+        "dateOfBirth": "1991-01-12",
+        "sex": "FEMALE",
+        "nationality": "French",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "PARENTAL_LEAVE",
+        "salary": 4000.00,
+        "contacts": [
+            {
+                "id": 8,
+                "phoneNumber": "+33-6-1234-5678",
+                "email": "isabelle.dupont@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 9,
+        "name": "Lucas",
+        "lastname": "Smith",
+        "dateOfBirth": "1986-11-05",
+        "sex": "MALE",
+        "nationality": "American",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "ACTIVE",
+        "salary": 7200.00,
+        "contacts": [
+            {
+                "id": 9,
+                "phoneNumber": "+1-555-987-6543",
+                "email": "lucas.smith@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 10,
+        "name": "Mei",
+        "lastname": "Liu",
+        "dateOfBirth": "1994-06-21",
+        "sex": "FEMALE",
+        "nationality": "Chinese",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "INTERN",
+        "salary": 3800.00,
+        "contacts": [
+            {
+                "id": 10,
+                "phoneNumber": "+86-138-1234-5678",
+                "email": "mei.liu@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 11,
+        "name": "Alejandro",
+        "lastname": "Gómez",
+        "dateOfBirth": "1990-05-14",
+        "sex": "MALE",
+        "nationality": "Mexican",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "ACTIVE",
+        "salary": 4500.00,
+        "contacts": [
+            {
+                "id": 11,
+                "phoneNumber": "+52-55-1234-5678",
+                "email": "alejandro.gomez@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 12,
+        "name": "Fatima",
+        "lastname": "Rahman",
+        "dateOfBirth": "1992-07-23",
+        "sex": "FEMALE",
+        "nationality": "Bangladeshi",
+        "permissions": "HR_ADMIN",
+        "jobRoles": [],
+        "status": "TRAINING",
+        "salary": 5100.00,
+        "contacts": [
+            {
+                "id": 12,
+                "phoneNumber": "+880-170-987-6543",
+                "email": "fatima.rahman@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 13,
+        "name": "Liam",
+        "lastname": "O Connor",
+        "dateOfBirth": "1988-11-30",
+        "sex": "MALE",
+        "nationality": "Irish",
+        "permissions": "ASSETS_ADMIN",
+        "jobRoles": [],
+        "status": "PROBATION",
+        "salary": 6700.00,
+        "contacts": [
+            {
+                "id": 13,
+                "phoneNumber": "+353-85-987-6543",
+                "email": "liam.oconnor@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 14,
+        "name": "Elena",
+        "lastname": "Ivanova",
+        "dateOfBirth": "1995-02-18",
+        "sex": "FEMALE",
+        "nationality": "Bulgarian",
+        "permissions": "INFRASTRUCTURE_ADMIN",
+        "jobRoles": [],
+        "status": "CONTRACT",
+        "salary": 3900.00,
+        "contacts": [
+            {
+                "id": 14,
+                "phoneNumber": "+359-88-123-4567",
+                "email": "elena.ivanova@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 15,
+        "name": "Ravi",
+        "lastname": "Sharma",
+        "dateOfBirth": "1983-09-25",
+        "sex": "MALE",
+        "nationality": "Indian",
+        "permissions": "INFRASTRUCTURE_ADMIN",
+        "jobRoles": [],
+        "status": "ON_VACATION",
+        "salary": 7000.00,
+        "contacts": [
+            {
+                "id": 15,
+                "phoneNumber": "+91-98765-43210",
+                "email": "ravi.sharma@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 16,
+        "name": "Chloe",
+        "lastname": "Martin",
+        "dateOfBirth": "1997-12-05",
+        "sex": "FEMALE",
+        "nationality": "Canadian",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "PARENTAL_LEAVE",
+        "salary": 4200.00,
+        "contacts": [
+            {
+                "id": 16,
+                "phoneNumber": "+1-647-123-4567",
+                "email": "chloe.martin@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 17,
+        "name": "Gabriel",
+        "lastname": "Silva",
+        "dateOfBirth": "1981-04-20",
+        "sex": "MALE",
+        "nationality": "Brazilian",
+        "permissions": "ASSETS_ADMIN",
+        "jobRoles": [],
+        "status": "ACTIVE",
+        "salary": 6100.00,
+        "contacts": [
+            {
+                "id": 17,
+                "phoneNumber": "+55-11-9987-6543",
+                "email": "gabriel.silva@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 18,
+        "name": "Aya",
+        "lastname": "Yamamoto",
+        "dateOfBirth": "1996-08-10",
+        "sex": "FEMALE",
+        "nationality": "Japanese",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "TRAINING",
+        "salary": 3800.00,
+        "contacts": [
+            {
+                "id": 18,
+                "phoneNumber": "+81-90-5678-1234",
+                "email": "aya.yamamoto@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 19,
+        "name": "Samuel",
+        "lastname": "Anderson",
+        "dateOfBirth": "1994-06-29",
+        "sex": "MALE",
+        "nationality": "Australian",
+        "permissions": "ASSETS_ADMIN",
+        "jobRoles": [],
+        "status": "CONTRACT",
+        "salary": 4300.00,
+        "contacts": [
+            {
+                "id": 19,
+                "phoneNumber": "+61-400-123-456",
+                "email": "samuel.anderson@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 20,
+        "name": "Sofia",
+        "lastname": "Rodriguez",
+        "dateOfBirth": "1989-10-22",
+        "sex": "FEMALE",
+        "nationality": "Colombian",
+        "permissions": "HR_ADMIN",
+        "jobRoles": [],
+        "status": "TEMPORARY",
+        "salary": 5400.00,
+        "contacts": [
+            {
+                "id": 20,
+                "phoneNumber": "+57-320-987-6543",
+                "email": "sofia.rodriguez@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 21,
+        "name": "Victor",
+        "lastname": "Petrov",
+        "dateOfBirth": "1986-03-14",
+        "sex": "MALE",
+        "nationality": "Russian",
+        "permissions": "INFRASTRUCTURE_ADMIN",
+        "jobRoles": [],
+        "status": "PROBATION",
+        "salary": 6800.00,
+        "contacts": [
+            {
+                "id": 21,
+                "phoneNumber": "+7-495-987-6543",
+                "email": "victor.petrov@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 22,
+        "name": "Anita",
+        "lastname": "Mehta",
+        "dateOfBirth": "1993-05-21",
+        "sex": "FEMALE",
+        "nationality": "Indian",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "INTERN",
+        "salary": 3500.00,
+        "contacts": [
+            {
+                "id": 22,
+                "phoneNumber": "+91-88765-43210",
+                "email": "anita.mehta@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 23,
+        "name": "Thomas",
+        "lastname": "Johnson",
+        "dateOfBirth": "1980-07-01",
+        "sex": "MALE",
+        "nationality": "American",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "ACTIVE",
+        "salary": 4800.00,
+        "contacts": [
+            {
+                "id": 23,
+                "phoneNumber": "+1-212-555-7890",
+                "email": "thomas.johnson@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 24,
+        "name": "Amina",
+        "lastname": "Ali",
+        "dateOfBirth": "1998-02-27",
+        "sex": "FEMALE",
+        "nationality": "Nigerian",
+        "permissions": "HR_ADMIN",
+        "jobRoles": [],
+        "status": "PENDING_ASSIGNMENT",
+        "salary": 5000.00,
+        "contacts": [
+            {
+                "id": 24,
+                "phoneNumber": "+234-802-123-4567",
+                "email": "amina.ali@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 25,
+        "name": "Nikolai",
+        "lastname": "Volkov",
+        "dateOfBirth": "1985-01-05",
+        "sex": "MALE",
+        "nationality": "Ukrainian",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "CONTRACT",
+        "salary": 4400.00,
+        "contacts": [
+            {
+                "id": 25,
+                "phoneNumber": "+380-50-987-6543",
+                "email": "nikolai.volkov@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 26,
+        "name": "Yuki",
+        "lastname": "Kobayashi",
+        "dateOfBirth": "1991-08-19",
+        "sex": "FEMALE",
+        "nationality": "Japanese",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "INTERN",
+        "salary": 3700.00,
+        "contacts": [
+            {
+                "id": 26,
+                "phoneNumber": "+81-90-9876-5432",
+                "email": "yuki.kobayashi@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 27,
+        "name": "Juan",
+        "lastname": "Perez",
+        "dateOfBirth": "1987-11-12",
+        "sex": "MALE",
+        "nationality": "Spanish",
+        "permissions": "ASSETS_ADMIN",
+        "jobRoles": [],
+        "status": "SUSPENDED",
+        "salary": 5900.00,
+        "contacts": [
+            {
+                "id": 27,
+                "phoneNumber": "+34-612-345-678",
+                "email": "juan.perez@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 28,
+        "name": "Beatrice",
+        "lastname": "Moretti",
+        "dateOfBirth": "1992-09-03",
+        "sex": "FEMALE",
+        "nationality": "Italian",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "PARENTAL_LEAVE",
+        "salary": 4100.00,
+        "contacts": [
+            {
+                "id": 28,
+                "phoneNumber": "+39-334-123-4567",
+                "email": "beatrice.moretti@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 29,
+        "name": "Omar",
+        "lastname": "Hassan",
+        "dateOfBirth": "1990-06-30",
+        "sex": "MALE",
+        "nationality": "Moroccan",
+        "permissions": "NO_ADMIN",
+        "jobRoles": [],
+        "status": "TEMPORARY",
+        "salary": 4600.00,
+        "contacts": [
+            {
+                "id": 29,
+                "phoneNumber": "+212-600-987654",
+                "email": "omar.hassan@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    },
+    {
+        "id": 30,
+        "name": "Emily",
+        "lastname": "White",
+        "dateOfBirth": "1994-12-17",
+        "sex": "FEMALE",
+        "nationality": "British",
+        "permissions": "HR_ADMIN",
+        "jobRoles": [],
+        "status": "ACTIVE",
+        "salary": 4000.00,
+        "contacts": [
+            {
+                "id": 30,
+                "phoneNumber": "+44-7911-123456",
+                "email": "emily.white@brainventory.com"
+            }
+        ],
+        "loginDate": null
+    }
+]
