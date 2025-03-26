@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AdminRegister from "./pages/AdminRegister";
 import EmployeeLogin from "./pages/EmployeeLogin";
 import Error404 from "./pages/Error404";
-import TestInventory from "./pages/TestInventory";
 import EmployeesInventory from "./pages/inventories/EmployeesInventory";
 import BuildingsInventory from "./pages/inventories/BuildingsInventory";
 import "./App.css";
@@ -34,20 +33,20 @@ function App() {
             <Route path="/admin-register" element={<AdminRegister />} />
             <Route path="/employee-login" element={<EmployeeLogin />} />
 
-            <Route path="/devices-inventory" element={<TestInventory />} />
-            <Route path="/peripherals-inventory" element={<TestInventory />} />
-            <Route path="/software-inventory" element={<TestInventory />} />
+            <Route path="/devices-inventory" element={<EmployeeLogin />} />
+            <Route path="/peripherals-inventory" element={<EmployeeLogin />} />
+            <Route path="/software-inventory" element={<EmployeeLogin />} />
             <Route
               path="/software-license-inventory"
-              element={<TestInventory />}
+              element={<EmployeeLogin />}
             />
             <Route
               path="/buildings-inventory"
               element={<BuildingsInventory />}
             />
-            <Route path="/rooms-inventory" element={<TestInventory />} />
-            <Route path="/departments-inventory" element={<TestInventory />} />
-            <Route path="/job-roles-inventory" element={<TestInventory />} />
+            <Route path="/rooms-inventory" element={<EmployeeLogin />} />
+            <Route path="/departments-inventory" element={<EmployeeLogin />} />
+            <Route path="/job-roles-inventory" element={<EmployeeLogin />} />
             <Route
               path="/employees-inventory"
               element={<EmployeesInventory />}

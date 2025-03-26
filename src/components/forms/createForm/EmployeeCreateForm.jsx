@@ -647,6 +647,12 @@ const EmployeeCreateForm = ({ onSubmit }) => {
               {...register("addresses[0].reference")}
             />
           </Form.Group>
+
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
+            } w-100`}
+          ></Form.Group>
         </Container>
 
         <Container

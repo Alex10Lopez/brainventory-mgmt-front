@@ -1,9 +1,9 @@
 import InventoryManagement from "../../components/InventoryManagement";
 import NavigationBar from "../../components/NavigationBar";
 import BuildingTableColumns from "../../components/columns/BuildingTableColumns";
-import EmployeeCreateForm from "../../components/forms/createForm/EmployeeCreateForm";
-import EmployeeUpdateForm from "../../components/forms/updateForm/EmployeeUpdateForm";
-import EmployeeView from "../../components/views/EmployeeView";
+import BuildingCreateForm from "../../components/forms/createForm/BuildingCreateForm";
+import BuildingUpdateForm from "../../components/forms/updateForm/BuildingUpdateForm";
+import BuildingView from "../../components/views/BuildingView";
 import {
   saveBuilding,
   findAll,
@@ -26,9 +26,9 @@ function BuildingsInventory() {
         updateById={updateBuilding}
         deleteById={deleteBuilding}
         tableColumns={tableColumns}
-        CreateModal={EmployeeCreateForm}
-        ViewModal={EmployeeView}
-        UpdateModal={EmployeeUpdateForm}
+        CreateModal={BuildingCreateForm}
+        ViewModal={BuildingView}
+        UpdateModal={BuildingUpdateForm}
       />
     </>
   );

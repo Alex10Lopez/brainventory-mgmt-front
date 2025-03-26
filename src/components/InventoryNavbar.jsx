@@ -130,7 +130,7 @@ function InventoryNavbar() {
                       </Button>
                       <Button
                         variant="info"
-                        className="px-1 mx-1 w-50"
+                        className="px-1 mx-1 w-50 text-white"
                         onClick={handleShowModalView}
                       >
                         Ver registro
@@ -164,7 +164,7 @@ function InventoryNavbar() {
                     </Button>
                     <Button
                       variant="info"
-                      className="px-1 px-xl-3 mx-md-1 mx-lg-2"
+                      className="px-1 px-xl-3 mx-md-1 mx-lg-2 text-white"
                       onClick={handleShowModalView}
                     >
                       Ver registro

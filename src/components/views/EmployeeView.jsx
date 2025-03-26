@@ -346,6 +346,10 @@ const EmployeeView = ({ readData }) => {
             )}
           </p>
         </div>
+
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
+        ></div>
       </Container>
     </>
   );

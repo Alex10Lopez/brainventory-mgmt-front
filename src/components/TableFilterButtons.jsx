@@ -29,7 +29,7 @@ function TableFilterButtons() {
         </Button>
         <Button
           variant="warning"
-          className="px-1 ms-1 mb-2 w-50"
+          className="px-1 ms-1 mb-2 w-50 text-white"
           onClick={() => handleClearFilters()}
         >
           Borrar filtros
@@ -47,7 +47,7 @@ function TableFilterButtons() {
       </Button>
       <Button
         variant="warning"
-        className="px-1 px-xl-3 ms-md-1 ms-xl-2"
+        className="px-1 px-xl-3 ms-md-1 ms-xl-2 text-white"
         onClick={() => handleClearFilters()}
       >
         Borrar filtros

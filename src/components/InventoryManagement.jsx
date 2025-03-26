@@ -109,7 +109,7 @@ function InventoryManagement({
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <Alert variant="danger" className="text-center" dismissible>
-          Error: {error?.message || "Ocurrió un error al mostrar datos"}
+          Error: {error?.message || "Ocurrió un error al mostrar los datos."}
         </Alert>
       </div>
     );
@@ -132,7 +132,7 @@ function InventoryManagement({
         <Alert variant="danger" className="text-center" dismissible>
           Error:{" "}
           {errorMutuation?.message ||
-            "Ocurrió un error al eliminar los registros"}
+            "Ocurrió un error al eliminar los registros."}
         </Alert>
       </div>
     );

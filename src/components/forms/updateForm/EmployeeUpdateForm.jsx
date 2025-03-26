@@ -556,7 +556,7 @@ const EmployeeUpdateForm = ({ readData, onSubmit }) => {
             <Form.Control
               type="text"
               placeholder="Ejemplo: 75008"
-              defaultValue={employeeData.addresses?.[0]?.posrtalCode || ""}
+              defaultValue={employeeData.addresses?.[0]?.postalCode || ""}
               {...register("addresses[0].postalCode")}
             />
             {errors.addresses?.[0]?.postalCode && (
@@ -668,6 +668,12 @@ const EmployeeUpdateForm = ({ readData, onSubmit }) => {
               {...register("addresses[0].reference")}
             />
           </Form.Group>
+
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
+            } w-100`}
+          ></Form.Group>
         </Container>
 
         <Container

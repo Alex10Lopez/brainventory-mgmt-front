@@ -87,7 +87,8 @@ function InventoryModalUpdate() {
         {isError && (
           <div className="d-flex justify-content-center align-items-center vh-100">
             <Alert variant="danger" className="text-center">
-              Error: {error?.message || "Ocurrió un error al ver información"}
+              Error:{" "}
+              {error?.message || "Ocurrió un error al mostrar los datos."}
             </Alert>
           </div>
         )}
@@ -104,7 +105,9 @@ function InventoryModalUpdate() {
         {isErrorMutation && (
           <div className="d-flex justify-content-center align-items-center vh-100">
             <Alert variant="danger" className="text-center">
-              Error: {errorMutuation?.message || "Ocurrió un error al guardar"}
+              Error:{" "}
+              {errorMutuation?.message ||
+                "Ocurrió un error al actualizar registro."}
             </Alert>
           </div>
         )}

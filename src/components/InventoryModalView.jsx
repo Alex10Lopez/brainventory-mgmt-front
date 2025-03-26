@@ -58,7 +58,7 @@ function InventoryModalView() {
         {isError && (
           <div className="d-flex justify-content-center align-items-center vh-100">
             <Alert variant="danger" className="text-center" dismissible>
-              Error: {error?.message || "Ocurrió un error al ver información"}
+              Error: {error?.message || "Ocurrió un error al ver información."}
             </Alert>
           </div>
         )}
