@@ -5,7 +5,7 @@ function HumanResourcesMenu() {
   return (
     <>
       <InventoryMenu
-        title="Menú de Recrusos Humanos"
+        title="Menú de Recursos Humanos"
         inventoryCards={humanResourcesMenu}
       />
     </>

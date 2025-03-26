@@ -1,30 +1,36 @@
 import PropTypes from "prop-types";
-import { Button, Modal } from "react-bootstrap";
+import { Alert, Button, Modal, Spinner } from "react-bootstrap";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { saveEmployee } from "../api/EmployeeService";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { inventoryContext } from "./InventoryManagement";
 
-function InventoryModalCreate({
-  showModalCreate,
-  setShowModalCreate,
-  CreateForm,
-}) {
+function InventoryModalCreate() {
+  const {
+    createRecord,
+    queryClient,
+    CreateModal,
+    showModalCreate,
+    setShowModalCreate,
+  } = useContext(inventoryContext);
+
   const windowWidth = useWindowWidth();
-  const [formValues, setFormValues] = useState(null);
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: saveEmployee,
-    onSuccess: () => {
+  const { isPending, isError, error, mutate } = useMutation({
+    mutationFn: createRecord,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["dataTable"]);
       setShowModalCreate(false);
     },
   });
 
-  const handleAddEmployee = () => {
-    mutate(formValues);
+  const handleCloseModalCreate = () => {
+    setShowModalCreate(false);
   };
 
-  const handleCloseModalCreate = () => setShowModalCreate(false);
+  const handleCreate = (data) => {
+    mutate(data);
+  };
 
   return (
     <Modal
@@ -44,27 +50,47 @@ function InventoryModalCreate({
         <Modal.Title className="text-primary">Agregar </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <CreateForm setFormValues={setFormValues} />
+        <CreateModal onSubmit={handleCreate} />
+
+        {isPending && (
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <Alert variant="info" className="text-center">
+              <Spinner animation="border" size="sm" className="me-2" />{" "}
+              Cargando...
+            </Alert>
+          </div>
+        )}
+
+        {isError && (
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <Alert variant="danger" className="text-center" dismissible>
+              Error: {error?.message || "Ocurrió un error al guardar"}
+            </Alert>
+          </div>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="danger" onClick={handleCloseModalCreate}>
-          Cancelar
+          Cerrar
         </Button>
         <Button
           variant="success"
-          onClick={handleAddEmployee}
+          type="submit"
+          form="create-form"
           disabled={isPending}
         >
-          {isPending ? "Agregando..." : "Agregar"}
+          {isPending ? "Guardando..." : "Guardar"}
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
-InventoryModalCreate.PropTypes = {
+/*InventoryModalCreate.propTypes = {
   showModalCreate: PropTypes.bool,
-  setShowModalCreate: PropTypes.bool.isRequired,
-};
+  setShowModalCreate: PropTypes.func.isRequired,
+  ReadModal: PropTypes.elementType.isRequired,
+  selectedRows: PropTypes.array.isRequired,
+};*/
 
 export default InventoryModalCreate;

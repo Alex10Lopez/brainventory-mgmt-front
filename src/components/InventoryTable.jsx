@@ -9,25 +9,23 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import InventoryPagination from "./InventoryPagination";
-import InventoryModalCreate from "./InventoryModalCreate";
-import InventoryModalRead from "./InventoryModalRead";
+import { useContext, useEffect } from "react";
+import { inventoryContext } from "./InventoryManagement";
 
-function InventoryTable({
-  data,
-  columns,
-  sorting,
-  searchValue,
-  columnFilters,
-  selectedFilter,
-  showModalCreate,
-  setShowModalCreate,
-  showModalRead,
-  setShowModalRead,
-  CreateForm,
-}) {
+function InventoryTable() {
+  const {
+    inventoryData,
+    tableColumns,
+    sorting,
+    searchValue,
+    columnFilters,
+    selectedFilter,
+    setSelectedRows,
+  } = useContext(inventoryContext);
+
   const table = useReactTable({
-    data,
-    columns,
+    data: inventoryData.data,
+    columns: tableColumns,
     state: {
       sorting,
       globalFilter: selectedFilter ? "" : searchValue,
@@ -41,6 +39,18 @@ function InventoryTable({
 
   const currentPageIndex = table.getState().pagination.pageIndex;
   const totalPages = table.getPageCount();
+
+  useEffect(() => {
+    table.resetRowSelection();
+  }, [inventoryData]);
+
+  useEffect(() => {
+    const selectedIds = table
+      .getSelectedRowModel()
+      .rows.map((row) => row.original.id);
+
+    setSelectedRows(selectedIds);
+  }, [table.getSelectedRowModel().rows]);
 
   return (
     <>
@@ -79,66 +89,17 @@ function InventoryTable({
         onNextPage={() => table.nextPage()}
         onPageChange={(pageIndex) => table.setPageIndex(pageIndex)}
       />
-
-      <InventoryModalCreate
-        showModalCreate={showModalCreate}
-        setShowModalCreate={setShowModalCreate}
-        CreateForm={CreateForm}
-      />
-
-      <InventoryModalRead
-        showModalRead={showModalRead}
-        setShowModalRead={setShowModalRead}
-      />
     </>
   );
 }
 
-InventoryTable.propTypes = {
-  /*data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      last_name: PropTypes.string.isRequired,
-      date_of_birth: PropTypes.string.isRequired,
-      gender: PropTypes.string.isRequired,
-      nationality: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      job_rol: PropTypes.string.isRequired,
-      phone: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    })
-  ).isRequired,*/
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      header: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
-        .isRequired,
-      accessorKey: PropTypes.string,
-      accessorFn: PropTypes.func,
-      cell: PropTypes.func,
-      sortingFn: PropTypes.func,
-    })
-  ).isRequired,
-  sorting: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      desc: PropTypes.bool.isRequired,
-    })
-  ),
-  searchValue: PropTypes.string,
-  columnFilters: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      value: PropTypes.any,
-      operator: PropTypes.string,
-    })
-  ),
+/*InventoryTable.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sorting: PropTypes.array.isRequired,
+  searchValue: PropTypes.string.isRequired,
+  columnFilters: PropTypes.array.isRequired,
   selectedFilter: PropTypes.string,
-  showModalCreate: PropTypes.bool,
-  setShowModalCreate: PropTypes.func.isRequired,
-  showModalRead: PropTypes.bool,
-  setShowModalRead: PropTypes.func.isRequired,
-};
+};*/
 
 export default InventoryTable;

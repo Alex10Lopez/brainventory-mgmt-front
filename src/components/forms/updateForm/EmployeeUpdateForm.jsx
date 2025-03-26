@@ -1,79 +1,70 @@
 import { Alert, Container, Form } from "react-bootstrap";
 import { useForm, useWatch } from "react-hook-form";
-import useWindowWidth from "../hooks/useWindowWidth";
-import countries from "../../data/constants/countries";
-import jobRoles from "../../data/database/jobRoles";
+import useWindowWidth from "../../hooks/useWindowWidth";
+import countriesEs from "../../../data/constants/countriesEs";
+import demonymEs from "../../../data/constants/demonymEs";
+import jobRoles from "../../../data/database/jobRoles";
+import {
+  SexEnum,
+  PermissionsEnum,
+  StatusEnum,
+} from "../../../data/enums/employeeEnums";
 import { useEffect } from "react";
 
-const EmployeeForm = ({ setFormValues }) => {
+const EmployeeUpdateForm = ({ readData, onSubmit }) => {
   const windowWidth = useWindowWidth();
+
+  const employeeData = readData;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    reset,
     setValue,
   } = useForm();
 
-  /*const { fields: addressFields, append: appendAddress } = useFieldArray({
-    control,
-    name: "addresses",
-  });
-
-  const addAddress = () => {
-    appendAddress({
-      street: "",
-      streetNumber: "",
-      postalCode: "",
-      city: "",
-      countryState: "",
-      country: "",
-      reference: "",
-    });
-  };*/
+  useEffect(() => {
+    if (employeeData) {
+      reset(employeeData);
+    }
+  }, [employeeData, reset]);
 
   const formValues = useWatch({
     control,
   });
 
-  useEffect(() => {
-    if (formValues.name && formValues.lastname) {
-      const name = formValues.name.trim().toLowerCase();
-      const lastnames = formValues.lastname.trim().toLowerCase().split(" ");
+  const password = useWatch({ control, name: "password", defaultValue: "" });
 
-      let email = "";
-      if (lastnames.length === 1) {
-        email = `${name}.${lastnames[0]}@brainventory.com`;
-      } else {
-        const secondLastName = lastnames[1];
-        const secondInitials =
-          secondLastName.length > 1
-            ? secondLastName.slice(0, 2)
-            : secondLastName;
-        email = `${name}.${lastnames[0]}${secondInitials}@brainventory.com`;
-      }
+  const showPassword = useWatch({
+    control,
+    name: "showPassword",
+    defaultValue: false,
+  });
 
-      setValue("contacts[0].email", email);
-    }
-  }, [formValues.name, formValues.lastname, setValue]);
-
-  const filteredFormValues = {
+  const formValuesToSubmit = {
     ...formValues,
     jobRoles: (formValues.jobRoles || []).filter((role) => role.id !== ""),
     contacts: (formValues.contacts || []).filter(
       (contact) => contact.phoneNumber || contact.email
     ),
+    showPassword: undefined,
+    verifyPassword: undefined,
   };
 
-  const onSubmit = () => {
-    setFormValues(filteredFormValues);
-    console.log(JSON.stringify(filteredFormValues, null, 2)); // Aquí verás el salario y el id de jobRoles correctamente convertidos
+  const handleFormSubmit = () => {
+    onSubmit(formValuesToSubmit);
   };
 
   return (
     <>
-      <Form className="form-modal" onSubmit={handleSubmit(onSubmit)}>
+      <Form
+        id="update-form"
+        className="form-modal"
+        onSubmit={handleSubmit(handleFormSubmit)}
+      >
+        {/*<pre>{JSON.stringify(formValuesToSubmit, null, 2)}</pre>*/}
         <Container
           fluid
           className={`fields-container d-flex ${
@@ -83,25 +74,25 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="form-control-id-1"
+            controlId="employeePhotoInput"
           >
             <Form.Label>Foto del empleado</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingresa la URL de la foto."
+              defaultValue={employeeData.image || ""}
               {...register("image")}
             />
           </Form.Group>
 
-          <Container
-            className={`form-group-1 mb-3 ${
-              windowWidth >= 576 && "pe-2"
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
             } w-100`}
-            controlId="form-control-id-1"
-          ></Container>
+          ></Form.Group>
         </Container>
 
         <Container
@@ -113,33 +104,17 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="form-control-id-1"
+            controlId="employeeNameInput"
           >
             <Form.Label>Nombre del empleado</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingrese el nombre del empleado"
-              {...register("name", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese el nombre del empleado.",
-                },
-                minLength: {
-                  value: 3,
-                  message: "El nombre debe tener al menos 3 caracteres.",
-                },
-                maxLength: {
-                  value: 50,
-                  message: "El nombre no debe exceder los 50 caracteres.",
-                },
-                pattern: {
-                  value: /^[A-Za-zÁáÉéÍíÓóÚúÑñüÜ\s-]{3,50}$/,
-                  message: "El formato del nombre no es válido.",
-                },
-              })}
+              defaultValue={employeeData.name || ""}
+              {...register("name")}
             />
             {errors.name && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -149,32 +124,17 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="employeeLastNameInput"
           >
             <Form.Label>Apellido del empleado</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingrese el apellido del empleado"
-              {...register("lastname", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese el apellido del empleado.",
-                },
-                minLength: {
-                  value: 3,
-                  message: "El apellido debe tener al menos 3 caracteres.",
-                },
-                maxLength: {
-                  value: 50,
-                  message: "El apellido no debe exceder los 50 caracteres.",
-                },
-                pattern: {
-                  value: /^[A-Za-zÁáÉéÍíÓóÚúÑñüÜ\s-]{3,50}$/,
-                  message: "El formato del apellido no es válido.",
-                },
-              })}
+              defaultValue={employeeData.lastname || ""}
+              {...register("lastname")}
             />
             {errors.lastname && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -193,30 +153,22 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
+            controlId="employeeBirthDateInput"
           >
             <Form.Label>Fecha de nacimiento del empleado</Form.Label>
             <Form.Control
               type="date"
-              {...register("dateOfBirth", {
-                required: {
-                  value: true,
-                  message:
-                    "Por favor, seleccione la fecha de nacimiento del empleado.",
-                },
-                validate: (value) => {
-                  const valueDate = new Date(value);
-                  const currentDate = new Date();
-
-                  const age =
-                    currentDate.getFullYear() - valueDate.getFullYear();
-
-                  if (age < 18 || age > 100)
-                    return "La fecha de nacimiento no es válida.";
-                },
-              })}
+              defaultValue={
+                employeeData.dateOfBirth
+                  ? new Date(employeeData.dateOfBirth)
+                      .toISOString()
+                      .split("T")[0]
+                  : ""
+              }
+              {...register("dateOfBirth")}
             />
             {errors.dateOfBirth && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -226,25 +178,24 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="employeeSexSelect"
           >
             <Form.Label>Sexo del empleado</Form.Label>
             <Form.Select
-              {...register("sex", {
-                required: {
-                  value: true,
-                  message: "Por favor, seleccione el sexo del empleado.",
-                },
-              })}
-              defaultValue=""
+              {...register("sex")}
+              defaultValue={employeeData.sex?.toString() || ""}
             >
               <option disabled value="">
                 Seleccione el sexo
               </option>
-              <option value="MALE">Masculino</option>
-              <option value="FEMALE">Femenino</option>
+              {Object.entries(SexEnum).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </Form.Select>
             {errors.sex && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -263,29 +214,24 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
+            controlId="employeeNationalitySelect"
           >
-            <Form.Label>País del empleado</Form.Label>
+            <Form.Label>Nacionalidad del empleado</Form.Label>
             <Form.Select
-              {...register("nationality", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese el país del empleado.",
-                },
-              })}
-              defaultValue=""
+              {...register("nationality")}
+              defaultValue={employeeData.nationality || ""}
             >
-              <option disabled selected value="">
-                Seleccione el país
+              <option disabled value="">
+                Seleccione la nacionalidad
               </option>
-              {countries.map((country, index) => (
+              {demonymEs.map((country, index) => (
                 <option key={index} value={country}>
                   {country}
                 </option>
               ))}
-              <option value="usa">United States</option>
             </Form.Select>
             {errors.nationality && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -295,25 +241,24 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="employeePermissionsSelect"
           >
             <Form.Label>Permisos del empleado</Form.Label>
             <Form.Select
-              {...register("permissions", {
-                required: {
-                  value: true,
-                  message: "Por favor, seleccione el tipo de permisos.",
-                },
-              })}
-              defaultValue=""
+              {...register("permissions")}
+              defaultValue={employeeData.permissions?.toString() || ""}
             >
-              <option disabled selected value="">
+              <option disabled value="">
                 Seleccione el tipo de permisos
               </option>
-              <option value="GLOBAL_ADMIN">Administrador global</option>
-              <option value="ASSETS_ADMIN">Administrador de activos</option>
+              {Object.entries(PermissionsEnum).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </Form.Select>
             {errors.permissions && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -332,25 +277,24 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
+            controlId="employeeStatusSelect"
           >
             <Form.Label>Estado del empleado</Form.Label>
             <Form.Select
-              {...register("status", {
-                required: {
-                  value: true,
-                  message: "Por favor, seleccione el estado del empleado.",
-                },
-              })}
-              defaultValue=""
+              {...register("status")}
+              defaultValue={employeeData.status?.toString() || ""}
             >
-              <option disabled selected value="">
+              <option disabled value="">
                 Seleccione el estado
               </option>
-              <option value="ACTIVE">Activo</option>
-              <option value="ON_VACATION">De vacaciones</option>
+              {Object.entries(StatusEnum).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </Form.Select>
             {errors.status && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -360,22 +304,18 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="employeeSalaryInput"
           >
             <Form.Label>Salario mensual del empleado en USD</Form.Label>
             <Form.Control
               type="text"
               step="0.01"
               placeholder="Ingrese el salario en USD"
-              {...register("salary", {
-                required: {
-                  value: true,
-                  message:
-                    "Por favor, ingrese el salario mensual del empleado.",
-                },
-              })}
+              defaultValue={employeeData.salary || ""}
+              {...register("salary")}
             />
             {errors.salary && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -394,22 +334,17 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
+            controlId="primaryJobRoleSelect"
           >
             <Form.Label>Puesto de trabajo principal</Form.Label>
             <Form.Select
-              {...register("jobRoles[0].id", {
-                required: {
-                  value: true,
-                  message:
-                    "Por favor, seleccione el puesto de trabajo principal.",
-                },
-              })}
-              defaultValue=""
+              {...register("jobRoles[0].id")}
+              defaultValue={employeeData.jobRoles?.[0]?.id?.toString() || ""}
             >
-              <option disabled selected value="">
+              <option disabled value="">
                 Seleccione el puesto de trabajo
               </option>
               {jobRoles.map((role) => (
@@ -420,22 +355,26 @@ const EmployeeForm = ({ setFormValues }) => {
             </Form.Select>
             {errors.jobRoles?.[0]?.id && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
-                {errors.jobRoles[0].idmessage}
+                {errors.jobRoles[0].id.message}
               </Alert>
             )}
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="secondaryJobRoleSelect"
           >
             <Form.Label>
               Puesto de trabajo secundario{" "}
               <span className="text-secondary">(Opcional)</span>
             </Form.Label>
-            <Form.Select {...register("jobRoles[1].id")} defaultValue="">
-              <option disabled selected value="">
+            <Form.Select
+              {...register("jobRoles[1].id")}
+              defaultValue={employeeData.jobRoles?.[1]?.id?.toString() || ""}
+            >
+              <option disabled value="">
                 Seleccione el puesto de trabajo
               </option>
               {jobRoles.map((role) => (
@@ -456,34 +395,17 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
+            controlId="primaryPhoneNumberInput"
           >
             <Form.Label>Número de teléfono principal</Form.Label>
             <Form.Control
               type="tel"
               placeholder="Ejemplo: +52 55 1234 5678"
-              {...register("contacts[0].phoneNumber", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese el número de teléfono.",
-                },
-                minLength: {
-                  value: 10,
-                  message:
-                    "El número de teléfono debe tener al menos 10 digitos.",
-                },
-                maxLength: {
-                  value: 50,
-                  message:
-                    "El número de teléfono no debe exceder los 50 digitos.",
-                },
-                pattern: {
-                  value: /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
-                  message: "El formato del número de teléfono no es válido.",
-                },
-              })}
+              defaultValue={employeeData.contacts?.[0]?.phoneNumber || ""}
+              {...register("contacts[0].phoneNumber")}
             />
             {errors.contacts?.[0]?.phoneNumber && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -493,15 +415,17 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="companyEmailInput"
           >
             <Form.Label>Correo electrónico empresarial</Form.Label>
             <Form.Control
               type="email"
               disabled
-              placeholder="No aplica (se genera automáticamente)	"
+              placeholder="No aplica (se genera automáticamente)"
+              defaultValue={employeeData.contacts?.[0]?.email || ""}
               {...register("contacts[0].email")}
             />
             {errors.contacts?.[0]?.email && (
@@ -521,9 +445,10 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
+            controlId="secondaryPhoneNumberInput"
           >
             <Form.Label>
               Número de teléfono secundario{" "}
@@ -532,22 +457,8 @@ const EmployeeForm = ({ setFormValues }) => {
             <Form.Control
               type="tel"
               placeholder="Ejemplo: +52 55 1234 5678"
-              {...register("contacts[1].phoneNumber", {
-                minLength: {
-                  value: 10,
-                  message:
-                    "El número de teléfono debe tener al menos 10 digitos.",
-                },
-                maxLength: {
-                  value: 50,
-                  message:
-                    "El número de teléfono no debe exceder los 50 digitos.",
-                },
-                pattern: {
-                  value: /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
-                  message: "El formato del número de teléfono no es válido.",
-                },
-              })}
+              defaultValue={employeeData.contacts?.[1]?.phoneNumber || ""}
+              {...register("contacts[1].phoneNumber")}
             />
             {errors.contacts?.[1]?.phoneNumber && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -557,9 +468,10 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="personalEmailInput"
           >
             <Form.Label>
               Correo electrónico personal{" "}
@@ -568,22 +480,8 @@ const EmployeeForm = ({ setFormValues }) => {
             <Form.Control
               type="email"
               placeholder="Ejemplo: nombre@ejemplo.com"
-              {...register("contacts[1].email", {
-                minLength: {
-                  value: 5,
-                  message:
-                    "El correo electrónico debe tener al menos 3 caracteres.",
-                },
-                maxLength: {
-                  value: 254,
-                  message:
-                    "El correo electrónico no debe exceder los 254 caracteres.",
-                },
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: "El formato del correo electrónico no es válido.",
-                },
-              })}
+              defaultValue={employeeData.contacts?.[1]?.email || ""}
+              {...register("contacts[1].email")}
             />
             {errors.contacts?.[1].email && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -602,21 +500,17 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="form-control-id-1"
+            controlId="addressStreetInput"
           >
             <Form.Label>Calle</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ejemplo: Av. Reforma"
-              {...register("addresses[0].street", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese la calle.",
-                },
-              })}
+              defaultValue={employeeData.addresses?.[0]?.street || ""}
+              {...register("addresses[0].street")}
             />
             {errors.addresses?.[0]?.street && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -626,9 +520,10 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="addressStreetNumberInput"
           >
             <Form.Label>
               Número de la calle{" "}
@@ -637,6 +532,7 @@ const EmployeeForm = ({ setFormValues }) => {
             <Form.Control
               type="text"
               placeholder="Ejemplo: 102-B"
+              defaultValue={employeeData.addresses?.[0]?.streetNumber || ""}
               {...register("addresses[0].streetNumber")}
             />
           </Form.Group>
@@ -651,21 +547,17 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="form-control-id-1"
+            controlId="addressPostalCodeInput"
           >
             <Form.Label>Código Postal</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ejemplo: 75008"
-              {...register("addresses[0].postalCode", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese el código postal.",
-                },
-              })}
+              defaultValue={employeeData.addresses?.[0]?.posrtalCode || ""}
+              {...register("addresses[0].postalCode")}
             />
             {errors.addresses?.[0]?.postalCode && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -675,20 +567,17 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="addressCityInput"
           >
             <Form.Label>Cuidad</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ejemplo: Pachuca"
-              {...register("addresses[0].city", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese la ciudad del empleado.",
-                },
-              })}
+              defaultValue={employeeData.addresses?.[0]?.city || ""}
+              {...register("addresses[0].city")}
             />
             {errors.addresses?.[0]?.city && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -705,9 +594,10 @@ const EmployeeForm = ({ setFormValues }) => {
               ? "flex-column"
               : "flex-row justify-content-between"
           } px-0 w-100`}
+          controlId="addressStateInput"
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
             controlId="form-control-id-1"
@@ -716,12 +606,8 @@ const EmployeeForm = ({ setFormValues }) => {
             <Form.Control
               type="text"
               placeholder="Ejemplo: Hidalgo"
-              {...register("addresses[0].countryState", {
-                required: {
-                  value: true,
-                  message: "Por favor, ingrese el estado/provincia.",
-                },
-              })}
+              defaultValue={employeeData.addresses?.[0]?.countryState || ""}
+              {...register("addresses[0].countryState")}
             />
             {errors.addresses?.[0]?.countryState && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
@@ -731,24 +617,20 @@ const EmployeeForm = ({ setFormValues }) => {
           </Form.Group>
 
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "ps-2"
             } w-100`}
+            controlId="addressCountrySelect"
           >
             <Form.Label>País</Form.Label>
             <Form.Select
-              {...register("addresses[0].country", {
-                required: {
-                  value: true,
-                  message: "Por favor, seleccione el país.",
-                },
-              })}
-              defaultValue=""
+              {...register("addresses[0].country")}
+              defaultValue={employeeData.addresses?.[0]?.country || ""}
             >
-              <option disabled selected value="">
+              <option disabled value="">
                 Seleccione el país
               </option>
-              {countries.map((country, index) => (
+              {countriesEs.map((country, index) => (
                 <option key={index} value={country}>
                   {country}
                 </option>
@@ -771,10 +653,10 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="form-control-id-1"
+            controlId="addressReferenceInput"
           >
             <Form.Label>
               Referencia <span className="text-secondary">(Opcional)</span>
@@ -782,6 +664,7 @@ const EmployeeForm = ({ setFormValues }) => {
             <Form.Control
               type="text"
               placeholder="Ejemplo: Cerca del parque"
+              defaultValue={employeeData.addresses?.[0]?.reference || ""}
               {...register("addresses[0].reference")}
             />
           </Form.Group>
@@ -796,14 +679,14 @@ const EmployeeForm = ({ setFormValues }) => {
           } px-0 w-100`}
         >
           <Form.Group
-            className={`form-group-1 mb-3 ${
+            className={`form-section mb-3 ${
               windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="form-control-id-1"
+            controlId="accountPasswordInput"
           >
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
-              type="text"
+              type={showPassword ? "text" : "password"}
               placeholder="Ingrese la contraseña"
               {...register("password")}
             />
@@ -814,18 +697,57 @@ const EmployeeForm = ({ setFormValues }) => {
             )}
           </Form.Group>
 
-          <Container
-            className={`form-group-1 mb-3 ${
-              windowWidth >= 576 && "pe-2"
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
             } w-100`}
-            controlId="form-control-id-1"
-          ></Container>
+            controlId="accountPasswordConfirmationInput"
+          >
+            <Form.Label>Verificar contraseña</Form.Label>
+            <Form.Control
+              type={showPassword ? "text" : "password"}
+              placeholder="Verifique la contraseña"
+              {...register("verifyPassword", {
+                validate: (value) =>
+                  value === password || "Las contraseñas no coinciden.",
+              })}
+            />
+            {errors.verifyPassword && (
+              <Alert key="danger" variant="danger" className="mt-2 p-2">
+                {errors.verifyPassword.message}
+              </Alert>
+            )}
+          </Form.Group>
         </Container>
 
-        <pre>{JSON.stringify(filteredFormValues, null, 2)}</pre>
+        <Container
+          fluid
+          className={`fields-container d-flex ${
+            windowWidth < 576
+              ? "flex-column"
+              : "flex-row justify-content-between"
+          } px-0 w-100`}
+        >
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "pe-2"
+            } w-100`}
+            controlId="togglePasswordVisibilityCheckbox"
+          >
+            <Form.Label>Mostrar contraseña</Form.Label>
+            <Form.Check type="checkbox" {...register("showPassword")} />
+          </Form.Group>
+
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
+            } w-100`}
+            controlId="formSex"
+          ></Form.Group>
+        </Container>
       </Form>
     </>
   );
 };
 
-export default EmployeeForm;
+export default EmployeeUpdateForm;

@@ -3,8 +3,8 @@ import AdminRegister from "./pages/AdminRegister";
 import EmployeeLogin from "./pages/EmployeeLogin";
 import Error404 from "./pages/Error404";
 import TestInventory from "./pages/TestInventory";
-import EmployeesInventory from "./pages/EmployeesInventory";
-import ITDevicesInventory from "./pages/ITDevicesInventory";
+import EmployeesInventory from "./pages/inventories/EmployeesInventory";
+import BuildingsInventory from "./pages/inventories/BuildingsInventory";
 import "./App.css";
 import HumanResourcesMenu from "./pages/HumanResourcesMenu";
 import InfrastructureMenu from "./pages/infrastructureMenu";
@@ -34,14 +34,17 @@ function App() {
             <Route path="/admin-register" element={<AdminRegister />} />
             <Route path="/employee-login" element={<EmployeeLogin />} />
 
-            <Route path="/devices-inventory" element={<ITDevicesInventory />} />
+            <Route path="/devices-inventory" element={<TestInventory />} />
             <Route path="/peripherals-inventory" element={<TestInventory />} />
             <Route path="/software-inventory" element={<TestInventory />} />
             <Route
               path="/software-license-inventory"
               element={<TestInventory />}
             />
-            <Route path="/buildings-inventory" element={<TestInventory />} />
+            <Route
+              path="/buildings-inventory"
+              element={<BuildingsInventory />}
+            />
             <Route path="/rooms-inventory" element={<TestInventory />} />
             <Route path="/departments-inventory" element={<TestInventory />} />
             <Route path="/job-roles-inventory" element={<TestInventory />} />

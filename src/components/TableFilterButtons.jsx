@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 import { Button, Container } from "react-bootstrap";
 import useWindowWidth from "./hooks/useWindowWidth";
+import { useContext } from "react";
+import { inventoryContext } from "./InventoryManagement";
 
-function TableFilterButtons({
-  setSorting,
-  setColumnFilters,
-  setSelectedFilter,
-}) {
+function TableFilterButtons() {
+  const { setSorting, setColumnFilters, setSelectedFilter } =
+    useContext(inventoryContext);
+
   const windowWidth = useWindowWidth();
 
   const handleClearSorting = () => setSorting([]);
@@ -55,10 +56,10 @@ function TableFilterButtons({
   );
 }
 
-TableFilterButtons.propTypes = {
+/*TableFilterButtons.propTypes = {
   setSorting: PropTypes.func.isRequired,
   setColumnFilters: PropTypes.func.isRequired,
   setSelectedFilter: PropTypes.func.isRequired,
-};
+};*/
 
 export default TableFilterButtons;

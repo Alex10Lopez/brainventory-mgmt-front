@@ -4,10 +4,7 @@ import InventoryMenu from "../components/InventoryMenu";
 function AssetsMenu() {
   return (
     <>
-      <InventoryMenu
-        title="Menú de Infraestructura"
-        inventoryCards={assetsMenu}
-      />
+      <InventoryMenu title="Menú de Activos" inventoryCards={assetsMenu} />
     </>
   );
 }

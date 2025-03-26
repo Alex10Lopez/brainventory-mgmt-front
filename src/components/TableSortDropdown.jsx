@@ -5,11 +5,16 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import { useContext } from "react";
+import { inventoryContext } from "./InventoryManagement";
 
-function TableSortDropdown({ data, columns, sorting, setSorting }) {
+function TableSortDropdown() {
+  const { inventoryData, tableColumns, sorting, setSorting } =
+    useContext(inventoryContext);
+
   const table = useReactTable({
-    data,
-    columns,
+    data: inventoryData.data,
+    columns: tableColumns,
     state: {
       sorting,
     },
@@ -28,7 +33,7 @@ function TableSortDropdown({ data, columns, sorting, setSorting }) {
       : "";
 
   const sortColumnHeader =
-    columns.find((col) => col.accessorKey === sortColumn)?.header || "";
+    tableColumns.find((col) => col.accessorKey === sortColumn)?.header || "";
 
   return (
     <NavDropdown
@@ -60,39 +65,11 @@ function TableSortDropdown({ data, columns, sorting, setSorting }) {
   );
 }
 
-TableSortDropdown.propTypes = {
-  /*data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      last_name: PropTypes.string.isRequired,
-      date_of_birth: PropTypes.string.isRequired,
-      gender: PropTypes.string.isRequired,
-      nationality: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      job_rol: PropTypes.string.isRequired,
-      phone: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-    })
-  ).isRequired,*/
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      header: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
-        .isRequired,
-      accessorKey: PropTypes.string,
-      accessorFn: PropTypes.func,
-      cell: PropTypes.func,
-      sortingFn: PropTypes.func,
-    })
-  ).isRequired,
-  sorting: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      desc: PropTypes.bool.isRequired,
-    })
-  ),
+/*TableSortDropdown.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sorting: PropTypes.array.isRequired,
   setSorting: PropTypes.func.isRequired,
-};
+};*/
 
 export default TableSortDropdown;

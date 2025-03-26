@@ -5,7 +5,7 @@ import {
   StatusEnum,
 } from "../../data/enums/employeeEnums";
 
-const EmployeeColumns = () => {
+const EmployeeTableColumns = () => {
   return [
     {
       id: "select",
@@ -100,4 +100,4 @@ const EmployeeColumns = () => {
   ];
 };
 
-export default EmployeeColumns;
+export default EmployeeTableColumns;
