@@ -58,7 +58,7 @@ export const infraestructureMenu = [
     title: "Oficinas",
     text: "Visualiza los detalles de las oficinas de la empresa. Agrega, edita o elimina información sobre las distintas ubicaciones de la organización.",
     buttonText: "Gestionar oficinas",
-    link: "/offices-inventory",
+    link: "/rooms-inventory",
   },
   {
     id: 3,

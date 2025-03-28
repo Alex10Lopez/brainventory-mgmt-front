@@ -29,7 +29,7 @@ function NavigationBar() {
 
               <Nav.Link
                 as={NavLink}
-                to="/human-resourcer-menu"
+                to="/human-resources-menu"
                 className="text-primary"
               >
                 Recursos Humanos

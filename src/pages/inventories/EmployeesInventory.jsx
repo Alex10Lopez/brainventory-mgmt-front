@@ -10,7 +10,7 @@ import {
   findById,
   updateEmployee,
   deleteEmployee,
-} from "../../api/employeeService";
+} from "../../api/humanResources/employeeService";
 
 function EmployeesInventory() {
   const tableColumns = EmployeeTableColumns();
@@ -20,6 +20,7 @@ function EmployeesInventory() {
       <NavigationBar />
       <h1 className="text-center text-primary mt-3">Inventario de Empleados</h1>
       <InventoryManagement
+        titleInventory="Empleado"
         createRecord={saveEmployee}
         findAll={findAll}
         findById={findById}

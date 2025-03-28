@@ -7,6 +7,7 @@ import { inventoryContext } from "./InventoryManagement";
 
 function InventoryModalUpdate() {
   const {
+    titleInventory,
     findById,
     updateById,
     queryClient,
@@ -68,7 +69,9 @@ function InventoryModalUpdate() {
       className="form-modal"
     >
       <Modal.Header closeButton>
-        <Modal.Title className="text-primary">Actualizar </Modal.Title>
+        <Modal.Title className="text-primary">
+          Actualizar {titleInventory}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {readData && (

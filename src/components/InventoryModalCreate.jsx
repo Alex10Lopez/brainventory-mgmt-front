@@ -7,6 +7,7 @@ import { inventoryContext } from "./InventoryManagement";
 
 function InventoryModalCreate() {
   const {
+    titleInventory,
     createRecord,
     queryClient,
     CreateModal,
@@ -47,7 +48,9 @@ function InventoryModalCreate() {
       className="form-modal"
     >
       <Modal.Header closeButton>
-        <Modal.Title className="text-primary">Agregar </Modal.Title>
+        <Modal.Title className="text-primary">
+          Agregar {titleInventory}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <CreateModal onSubmit={handleCreate} />

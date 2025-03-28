@@ -79,7 +79,13 @@ const EmployeeTableColumns = () => {
     {
       header: "Salario (USD)",
       accessorKey: "salary",
-      cell: ({ getValue }) => `$${getValue().toLocaleString()}`,
+      accessorFn: (row) => {
+        const salary = parseFloat(row.salary);
+        return salary.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        });
+      },
     },
     {
       header: "Teléfono",

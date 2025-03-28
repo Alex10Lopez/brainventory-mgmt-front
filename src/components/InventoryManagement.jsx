@@ -12,6 +12,7 @@ import { createContext, useEffect, useState } from "react";
 export const inventoryContext = createContext();
 
 function InventoryManagement({
+  titleInventory,
   createRecord,
   findAll,
   findById,
@@ -141,6 +142,7 @@ function InventoryManagement({
   return (
     <inventoryContext.Provider
       value={{
+        titleInventory,
         inventoryData,
         createRecord,
         findAll,

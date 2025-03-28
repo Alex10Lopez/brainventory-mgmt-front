@@ -2,10 +2,10 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import useWindowWidth from "../hooks/useWindowWidth";
 
-const BuildingView = ({ readData }) => {
+const RoomView = ({ readData }) => {
   const windowWidth = useWindowWidth();
 
-  const buildingData = readData;
+  const roomData = readData;
 
   return (
     <>
@@ -18,9 +18,9 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Foto del edificio</strong>
+          <strong>Foto de la habitación</strong>
           <p>
-            {buildingData.image || (
+            {roomData.image || (
               <span className="text-secondary">No disponible</span>
             )}
           </p>
@@ -36,9 +36,9 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Nombre del edificio</strong>
+          <strong>Tipo de habitación</strong>
           <p>
-            {buildingData.name || (
+            {roomData.roomType.typeName || (
               <span className="text-secondary">No disponible</span>
             )}
           </p>
@@ -47,9 +47,9 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Número de pisos del edificio</strong>
+          <strong>Nombre de la habitación</strong>
           <p>
-            {buildingData.numberOfFloors || (
+            {roomData.name || (
               <span className="text-secondary">No disponible</span>
             )}
           </p>
@@ -65,125 +65,84 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Descripción del edificio</strong>
+          <strong>Capacidad máxima</strong>
           <p>
-            {buildingData.description || (
+            {roomData.capacityMax || (
               <span className="text-secondary">No disponible</span>
             )}
           </p>
+        </div>
+
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
+        >
+          <strong>Edificio</strong>
+          <p>
+            {roomData.building?.name || (
+              <span className="text-secondary">No disponible</span>
+            )}
+          </p>
+        </div>
+      </Container>
+
+      <Container
+        fluid
+        className={`details-section d-flex ${
+          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
+        } px-0 w-100`}
+      >
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
+        >
+          <strong>Nivel de piso</strong>
+          <p>
+            {roomData.floorLabel || (
+              <span className="text-secondary">No disponible</span>
+            )}
+          </p>
+        </div>
+
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
+        >
+          <strong>Descripción</strong>
+          <p>
+            {roomData.description || (
+              <span className="text-secondary">No disponible</span>
+            )}
+          </p>
+        </div>
+      </Container>
+
+      <Container
+        fluid
+        className={`details-section d-flex ${
+          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
+        } px-0 w-100`}
+      >
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
+        >
+          <strong>Dapartamentos presentes</strong>
+          {roomData.departments.length > 0 ? (
+            <ul>
+              {roomData.departments.map((dept, index) => (
+                <li key={index}>{dept.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              <span className="text-secondary">No disponible</span>
+            </p>
+          )}
         </div>
 
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         ></div>
       </Container>
-
-      <Container
-        fluid
-        className={`details-section d-flex ${
-          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
-        } px-0 w-100`}
-      >
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
-        >
-          <strong>Calle</strong>
-          <p>
-            {buildingData.address?.street || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
-        >
-          <strong>Número exterior</strong>
-          <p>
-            {buildingData.address?.streetNumber || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-      </Container>
-
-      <Container
-        fluid
-        className={`details-section d-flex ${
-          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
-        } px-0 w-100`}
-      >
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
-        >
-          <strong>Código Postal</strong>
-          <p>
-            {buildingData.address?.postalCode || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
-        >
-          <strong>Cuidad</strong>
-          <p>
-            {buildingData.address?.city || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-      </Container>
-
-      <Container
-        fluid
-        className={`details-section d-flex ${
-          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
-        } px-0 w-100`}
-      >
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
-        >
-          <strong>Estado/Provincia</strong>
-          <p>
-            {buildingData.address?.countryState || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
-        >
-          <strong>País</strong>
-          <p>
-            {buildingData.address?.country || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-      </Container>
-
-      <Container
-        fluid
-        className={`details-section d-flex ${
-          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
-        } px-0 w-100`}
-      >
-        <div
-          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
-        >
-          <strong>Referencia</strong>
-          <p>
-            {buildingData.address?.reference || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
-      </Container>
     </>
   );
 };
 
-export default BuildingView;
+export default RoomView;

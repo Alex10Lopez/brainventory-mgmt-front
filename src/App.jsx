@@ -4,6 +4,7 @@ import EmployeeLogin from "./pages/EmployeeLogin";
 import Error404 from "./pages/Error404";
 import EmployeesInventory from "./pages/inventories/EmployeesInventory";
 import BuildingsInventory from "./pages/inventories/BuildingsInventory";
+import RoomsInventory from "./pages/inventories/RoomsInventory";
 import "./App.css";
 import HumanResourcesMenu from "./pages/HumanResourcesMenu";
 import InfrastructureMenu from "./pages/infrastructureMenu";
@@ -26,7 +27,7 @@ function App() {
             />
 
             <Route
-              path="/human-resourcer-menu"
+              path="/human-resources-menu"
               element={<HumanResourcesMenu />}
             />
 
@@ -44,7 +45,7 @@ function App() {
               path="/buildings-inventory"
               element={<BuildingsInventory />}
             />
-            <Route path="/rooms-inventory" element={<EmployeeLogin />} />
+            <Route path="/rooms-inventory" element={<RoomsInventory />} />
             <Route path="/departments-inventory" element={<EmployeeLogin />} />
             <Route path="/job-roles-inventory" element={<EmployeeLogin />} />
             <Route

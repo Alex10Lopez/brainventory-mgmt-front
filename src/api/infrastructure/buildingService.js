@@ -21,3 +21,7 @@ export async function updateBuilding(building, id) {
 export async function deleteBuilding(id) {
   return await axios.delete(`${API_URL}/${id}`);
 }
+
+export async function findAllBuildings() {
+  return await axios.get(`${API_URL}/references`);
+}

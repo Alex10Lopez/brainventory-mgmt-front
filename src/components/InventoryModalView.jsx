@@ -6,8 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { inventoryContext } from "./InventoryManagement";
 
 function InventoryModalView() {
-  const { findById, ViewModal, showModalView, setShowModalView, selectedRows } =
-    useContext(inventoryContext);
+  const {
+    titleInventory,
+    findById,
+    ViewModal,
+    showModalView,
+    setShowModalView,
+    selectedRows,
+  } = useContext(inventoryContext);
 
   const windowWidth = useWindowWidth();
 
@@ -41,7 +47,9 @@ function InventoryModalView() {
       className="form-modal"
     >
       <Modal.Header closeButton>
-        <Modal.Title className="text-primary">Informacion </Modal.Title>
+        <Modal.Title className="text-primary">
+          Información de {titleInventory}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {readData && <ViewModal readData={readData.data} />}

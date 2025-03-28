@@ -10,7 +10,7 @@ import {
   findById,
   updateBuilding,
   deleteBuilding,
-} from "../../api/buildingService";
+} from "../../api/infrastructure/buildingService";
 
 function BuildingsInventory() {
   const tableColumns = BuildingTableColumns();
@@ -20,6 +20,7 @@ function BuildingsInventory() {
       <NavigationBar />
       <h1 className="text-center text-primary mt-3">Inventario de Edificios</h1>
       <InventoryManagement
+        titleInventory="Edificio"
         createRecord={saveBuilding}
         findAll={findAll}
         findById={findById}

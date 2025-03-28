@@ -3,13 +3,14 @@ import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import countriesEs from "../../../data/constants/countriesEs";
 import demonymEs from "../../../data/constants/demonymEs";
-import jobRoles from "../../../data/database/jobRoles";
 import {
   SexEnum,
   PermissionsEnum,
   StatusEnum,
 } from "../../../data/enums/employeeEnums";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { findAllJobRole } from "../../../api/humanResources/jobRoleService";
 
 const EmployeeUpdateForm = ({ readData, onSubmit }) => {
   const windowWidth = useWindowWidth();
@@ -33,6 +34,16 @@ const EmployeeUpdateForm = ({ readData, onSubmit }) => {
 
   const formValues = useWatch({
     control,
+  });
+
+  const {
+    isPending: isPendingJobRole,
+    isError: isErrorJobRole,
+    data: jobRoleReferences,
+    error: errorJobRole,
+  } = useQuery({
+    queryKey: ["jobRoleReferences"],
+    queryFn: findAllJobRole,
   });
 
   const password = useWatch({ control, name: "password", defaultValue: "" });
@@ -345,17 +356,26 @@ const EmployeeUpdateForm = ({ readData, onSubmit }) => {
               defaultValue={employeeData.jobRoles?.[0]?.id?.toString() || ""}
             >
               <option disabled value="">
-                Seleccione el puesto de trabajo
+                {isPendingJobRole
+                  ? "Cargando puestos de trabajo..."
+                  : "Seleccione el puesto de trabajo"}
               </option>
-              {jobRoles.map((role) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
+              {!isPendingJobRole &&
+                !isErrorJobRole &&
+                jobRoleReferences.data?.map((jobRole) => (
+                  <option key={jobRole.id} value={jobRole.id}>
+                    {jobRole.name}
+                  </option>
+                ))}
             </Form.Select>
             {errors.jobRoles?.[0]?.id && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
-                {errors.jobRoles[0].id.message}
+                {errors.jobRoles[0].id.jobRoles}
+              </Alert>
+            )}
+            {isErrorJobRole && (
+              <Alert key="warning" variant="warning" className="mt-2 p-2">
+                Error al cargar los puestos de trabajo: {errorJobRole.message}
               </Alert>
             )}
           </Form.Group>
@@ -375,14 +395,23 @@ const EmployeeUpdateForm = ({ readData, onSubmit }) => {
               defaultValue={employeeData.jobRoles?.[1]?.id?.toString() || ""}
             >
               <option disabled value="">
-                Seleccione el puesto de trabajo
+                {isPendingJobRole
+                  ? "Cargando puestos de trabajo..."
+                  : "Seleccione el puesto de trabajo"}
               </option>
-              {jobRoles.map((role) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
+              {!isPendingJobRole &&
+                !isErrorJobRole &&
+                jobRoleReferences.data?.map((jobRole) => (
+                  <option key={jobRole.id} value={jobRole.id}>
+                    {jobRole.name}
+                  </option>
+                ))}
             </Form.Select>
+            {isErrorJobRole && (
+              <Alert key="warning" variant="warning" className="mt-2 p-2">
+                Error al cargar los puestos de trabajo: {errorJobRole.message}
+              </Alert>
+            )}
           </Form.Group>
         </Container>
 
