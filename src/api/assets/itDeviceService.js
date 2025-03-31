@@ -21,3 +21,7 @@ export async function updateITDevice(itDevice, id) {
 export async function deleteITDevice(id) {
   return await axios.delete(`${API_URL}/${id}`);
 }
+
+export async function findAllITDevices() {
+  return await axios.get(`${API_URL}/references`);
+}

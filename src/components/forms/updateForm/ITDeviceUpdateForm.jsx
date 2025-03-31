@@ -313,10 +313,10 @@ const ITDeviceUpdateForm = ({ readData, onSubmit }) => {
                 {errors.hardwareSerie.idHardwareSerie.message}
               </Alert>
             )}
-            {isErrorHardwareBrand && (
+            {isErrorHardwareSerie && (
               <Alert key="warning" variant="warning" className="mt-2 p-2">
                 Error al cargar las series de dispositivos TI:{" "}
-                {errorHardwareBrand.message}
+                {errorHardwareSerie.message}
               </Alert>
             )}
           </Form.Group>

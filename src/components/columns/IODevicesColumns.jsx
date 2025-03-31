@@ -1,6 +1,6 @@
 import { Form } from "react-bootstrap";
 
-const ITDevicesColumns = () => {
+const IODevicesColumns = () => {
   return [
     {
       id: "select",
@@ -54,4 +54,4 @@ const ITDevicesColumns = () => {
   ];
 };
 
-export default ITDevicesColumns;
+export default IODevicesColumns;

@@ -65,7 +65,7 @@ const EmployeeTableColumns = () => {
     {
       header: "Puesto de trabajo",
       accessorFn: (row) =>
-        row.jobRoles.length > 0 ? row.jobRoles[0].name : "-",
+        row.jobRoles.length > 0 ? row.jobRoles?.[0]?.name : "-",
     },
     {
       header: "Estado",
@@ -89,11 +89,11 @@ const EmployeeTableColumns = () => {
     },
     {
       header: "Teléfono",
-      accessorFn: (row) => row.contacts[0].phoneNumber,
+      accessorFn: (row) => row.contacts?.[0]?.phoneNumber,
     },
     {
       header: "Correo electrónico",
-      accessorFn: (row) => row.contacts[0].email,
+      accessorFn: (row) => row.contacts?.[0]?.email,
     },
     {
       header: "Inicio de sesión",
