@@ -15,7 +15,7 @@ export const assetsMenu = [
     title: "Dispositivos electrónicos",
     text: "Accede a la información detallada sobre los dispositivos electrónicos, incluyendo opciones para agregar, editar o eliminar registros.",
     buttonText: "Gestionar dispositivos",
-    link: "/devices-inventory",
+    link: "/it-devices-inventory",
   },
   {
     id: 2,

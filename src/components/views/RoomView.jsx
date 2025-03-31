@@ -1,6 +1,7 @@
 import React from "react";
 import { Container } from "react-bootstrap";
 import useWindowWidth from "../hooks/useWindowWidth";
+import { RoomTypesEnum } from "../../data/enums/roomEnums";
 
 const RoomView = ({ readData }) => {
   const windowWidth = useWindowWidth();
@@ -38,7 +39,9 @@ const RoomView = ({ readData }) => {
         >
           <strong>Tipo de habitación</strong>
           <p>
-            {roomData.roomType.typeName || (
+            {roomData.roomType ? (
+              RoomTypesEnum[roomData.roomType]
+            ) : (
               <span className="text-secondary">No disponible</span>
             )}
           </p>

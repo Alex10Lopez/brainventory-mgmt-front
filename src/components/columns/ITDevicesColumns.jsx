@@ -32,7 +32,7 @@ const ITDevicesColumns = () => {
     },
     {
       header: "ID",
-      accessorFn: (row) => String(row.idITDevice),
+      accessorFn: (row) => String(row.id),
     },
     {
       header: "Dispositivo",

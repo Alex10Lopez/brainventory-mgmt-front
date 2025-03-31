@@ -1,5 +1,3 @@
-// enums.js
-
 export const SexEnum = {
   MALE: "Masculino",
   FEMALE: "Femenino",

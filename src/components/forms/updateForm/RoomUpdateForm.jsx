@@ -3,9 +3,10 @@ import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import { findAllBuildings } from "../../../api/infrastructure/buildingService";
 import { findAllDepartments } from "../../../api/infrastructure/departmentService";
-import { findAllRoomTypes } from "../../../api/infrastructure/roomTypeService";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { RoomTypesEnum } from "../../../data/enums/roomEnums";
+import { roomNumbers } from "../../../data/constants/roomNumbers";
 
 const RoomUpdateForm = ({ readData, onSubmit }) => {
   const windowWidth = useWindowWidth();
@@ -29,16 +30,6 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
 
   const formValues = useWatch({
     control,
-  });
-
-  const {
-    isPending: isPendingRoomType,
-    isError: isErrorRoomType,
-    data: roomTypeReferences,
-    error: errorRoomType,
-  } = useQuery({
-    queryKey: ["roomTypeReferences"],
-    queryFn: findAllRoomTypes,
   });
 
   const {
@@ -123,31 +114,21 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
           >
             <Form.Label>Tipo de habitación</Form.Label>
             <Form.Select
-              {...register("roomType.id")}
-              defaultValue={roomData.roomType?.id || ""}
+              {...register("roomType")}
+              defaultValue={roomData.roomType || ""}
             >
               <option disabled value="">
-                {isPendingRoomType
-                  ? "Cargando tipo de habitaciones..."
-                  : "Seleccione el tipo de habitación"}
+                Seleccione el tipo de habitación
               </option>
-              {!isPendingRoomType &&
-                !isErrorRoomType &&
-                roomTypeReferences.data?.map((roomType) => (
-                  <option key={roomType.id} value={roomType.id}>
-                    {roomType.typeName}
-                  </option>
-                ))}
+              {Object.entries(RoomTypesEnum).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </Form.Select>
-            {errors.roomType?.id && (
+            {errors.roomType && (
               <Alert key="danger" variant="danger" className="mt-2 p-2">
-                {errors.roomType.id.message}
-              </Alert>
-            )}
-            {isErrorRoomType && (
-              <Alert key="warning" variant="warning" className="mt-2 p-2">
-                Error al cargar los tipos de habitaciones:{" "}
-                {errorRoomType.message}
+                {errors.roomType.message}
               </Alert>
             )}
           </Form.Group>
@@ -187,6 +168,33 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
             } w-100`}
             controlId="roomCapacityInput"
           >
+            <Form.Label>Número de la habitación</Form.Label>
+            <Form.Select
+              {...register("number")}
+              defaultValue={roomData.number || ""}
+            >
+              <option disabled value="">
+                Seleccione el número de la habitación
+              </option>
+              {roomNumbers.map((country, index) => (
+                <option key={index} value={country}>
+                  {country}
+                </option>
+              ))}
+            </Form.Select>
+            {errors.number && (
+              <Alert key="danger" variant="danger" className="mt-2 p-2">
+                {errors.number.message}
+              </Alert>
+            )}
+          </Form.Group>
+
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
+            } w-100`}
+            controlId="roomBuildingInput"
+          >
             <Form.Label>Capacidad máxima de la habitación</Form.Label>
             <Form.Control
               type="text"
@@ -200,12 +208,21 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
               </Alert>
             )}
           </Form.Group>
+        </Container>
 
+        <Container
+          fluid
+          className={`fields-container d-flex ${
+            windowWidth < 576
+              ? "flex-column"
+              : "flex-row justify-content-between"
+          } px-0 w-100`}
+        >
           <Form.Group
             className={`form-section mb-3 ${
-              windowWidth >= 576 && "ps-2"
+              windowWidth >= 576 && "pe-2"
             } w-100`}
-            controlId="roomBuildingInput"
+            controlId="roomDescriptionInput"
           >
             <Form.Label>Edificio</Form.Label>
             <Form.Select
@@ -236,6 +253,25 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
               </Alert>
             )}
           </Form.Group>
+
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
+            } w-100`}
+          >
+            <Form.Label>Nivel de piso</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Ingrese el nivel de piso"
+              defaultValue={roomData.floorLabel || ""}
+              {...register("floorLabel")}
+            />
+            {errors.floorLabel && (
+              <Alert key="danger" variant="danger" className="mt-2 p-2">
+                {errors.floorLabel.message}
+              </Alert>
+            )}
+          </Form.Group>
         </Container>
 
         <Container
@@ -252,25 +288,6 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
             } w-100`}
             controlId="roomDescriptionInput"
           >
-            <Form.Label>Nivel de piso</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Ingrese el nivel de piso"
-              defaultValue={roomData.floorLabel || ""}
-              {...register("floorLabel")}
-            />
-            {errors.floorLabel && (
-              <Alert key="danger" variant="danger" className="mt-2 p-2">
-                {errors.floorLabel.message}
-              </Alert>
-            )}
-          </Form.Group>
-
-          <Form.Group
-            className={`form-section mb-3 ${
-              windowWidth >= 576 && "ps-2"
-            } w-100`}
-          >
             <Form.Label>Descripción de la habitación</Form.Label>
             <Form.Control
               type="text"
@@ -284,6 +301,12 @@ const RoomUpdateForm = ({ readData, onSubmit }) => {
               </Alert>
             )}
           </Form.Group>
+
+          <Form.Group
+            className={`form-section mb-3 ${
+              windowWidth >= 576 && "ps-2"
+            } w-100`}
+          ></Form.Group>
         </Container>
 
         <Container

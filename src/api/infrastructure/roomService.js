@@ -21,3 +21,7 @@ export async function updateRoom(room, id) {
 export async function deleteRoom(id) {
   return await axios.delete(`${API_URL}/${id}`);
 }
+
+export async function findAllRooms() {
+  return await axios.get(`${API_URL}/references`);
+}

@@ -5,6 +5,7 @@ import Error404 from "./pages/Error404";
 import EmployeesInventory from "./pages/inventories/EmployeesInventory";
 import BuildingsInventory from "./pages/inventories/BuildingsInventory";
 import RoomsInventory from "./pages/inventories/RoomsInventory";
+import ITDeviceInventory from "./pages/inventories/ITDeviceInventory";
 import "./App.css";
 import HumanResourcesMenu from "./pages/HumanResourcesMenu";
 import InfrastructureMenu from "./pages/infrastructureMenu";
@@ -34,7 +35,10 @@ function App() {
             <Route path="/admin-register" element={<AdminRegister />} />
             <Route path="/employee-login" element={<EmployeeLogin />} />
 
-            <Route path="/devices-inventory" element={<EmployeeLogin />} />
+            <Route
+              path="/it-devices-inventory"
+              element={<ITDeviceInventory />}
+            />
             <Route path="/peripherals-inventory" element={<EmployeeLogin />} />
             <Route path="/software-inventory" element={<EmployeeLogin />} />
             <Route

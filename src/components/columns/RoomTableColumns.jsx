@@ -1,4 +1,5 @@
 import { Form } from "react-bootstrap";
+import { RoomTypesEnum } from "../../data/enums/roomEnums";
 
 const RoomTableColumns = () => {
   return [
@@ -36,8 +37,17 @@ const RoomTableColumns = () => {
     },
     {
       header: "Nombre de la oficina",
-      accessorFn: (row) =>
-        `${row.roomType.typeName}${row.name ? ` - ${row.name}` : ""}`,
+      accessorFn: (row) => {
+        const roomTypeLabel = RoomTypesEnum[row.roomType] || row.roomType;
+        return row.name ? `${roomTypeLabel} - ${row.name}` : roomTypeLabel;
+      },
+      cell: ({ row }) => {
+        const roomType = row.original.roomType;
+        const roomName = row.original.name;
+        const roomTypeLabel = RoomTypesEnum[roomType] || roomType;
+
+        return roomName ? `${roomTypeLabel} - ${roomName}` : roomTypeLabel;
+      },
     },
     {
       header: "Capacidad maxima",
