@@ -11,6 +11,7 @@ import {
   updateRoom,
   deleteRoom,
 } from "../../api/infrastructure/roomService";
+import RoomForm from "../../components/forms/RoomForm";
 
 function RoomsInventory() {
   const tableColumns = RoomTableColumns();
@@ -29,9 +30,13 @@ function RoomsInventory() {
         updateById={updateRoom}
         deleteById={deleteRoom}
         tableColumns={tableColumns}
-        CreateModal={RoomCreateForm}
+        CreateModal={({ onSubmit }) => (
+          <RoomForm mode="create" onSubmit={onSubmit} />
+        )}
         ViewModal={RoomView}
-        UpdateModal={RoomUpdateForm}
+        UpdateModal={({ readData, onSubmit }) => (
+          <RoomForm mode="update" readData={readData} onSubmit={onSubmit} />
+        )}
       />
     </>
   );

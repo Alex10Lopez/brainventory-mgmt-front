@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:9010/api/hardware";
+const API_URL = "http://localhost:8080/api/hardware";
 
 export async function findAllITDeviceNames() {
   return await axios.get(`${API_URL}/it-devices`);

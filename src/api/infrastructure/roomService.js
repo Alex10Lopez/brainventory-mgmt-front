@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:9000/api/room";
+const API_URL = "http://localhost:8080/api/room";
 
 export async function saveRoom(room) {
   return await axios.post(API_URL, room);

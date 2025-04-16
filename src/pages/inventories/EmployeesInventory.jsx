@@ -1,8 +1,7 @@
 import InventoryManagement from "../../components/InventoryManagement";
 import NavigationBar from "../../components/NavigationBar";
 import EmployeeTableColumns from "../../components/columns/EmployeeTableColumns";
-import EmployeeCreateForm from "../../components/forms/createForm/EmployeeCreateForm";
-import EmployeeUpdateForm from "../../components/forms/updateForm/EmployeeUpdateForm";
+import EmployeeForm from "../../components/forms/EmployeeForm";
 import EmployeeView from "../../components/views/EmployeeView";
 import {
   saveEmployee,
@@ -27,9 +26,13 @@ function EmployeesInventory() {
         updateById={updateEmployee}
         deleteById={deleteEmployee}
         tableColumns={tableColumns}
-        CreateModal={EmployeeCreateForm}
+        CreateModal={({ onSubmit }) => (
+          <EmployeeForm mode="create" onSubmit={onSubmit} />
+        )}
         ViewModal={EmployeeView}
-        UpdateModal={EmployeeUpdateForm}
+        UpdateModal={({ readData, onSubmit }) => (
+          <EmployeeForm mode="update" readData={readData} onSubmit={onSubmit} />
+        )}
       />
     </>
   );

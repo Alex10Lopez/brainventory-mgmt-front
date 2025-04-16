@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:9000/api/building";
+const API_URL = "http://localhost:8080/api/building";
 
 export async function saveBuilding(building) {
   return await axios.post(API_URL, building);

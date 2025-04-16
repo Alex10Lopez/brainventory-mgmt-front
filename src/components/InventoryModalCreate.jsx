@@ -17,7 +17,13 @@ function InventoryModalCreate() {
 
   const windowWidth = useWindowWidth();
 
-  const { isPending, isError, error, mutate } = useMutation({
+  const {
+    isPending: isPendingMutation,
+    isError: isErrorMutation,
+    error,
+    mutate,
+    reset,
+  } = useMutation({
     mutationFn: createRecord,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["dataTable"]);
@@ -27,6 +33,7 @@ function InventoryModalCreate() {
 
   const handleCloseModalCreate = () => {
     setShowModalCreate(false);
+    reset();
   };
 
   const handleCreate = (data) => {
@@ -54,20 +61,16 @@ function InventoryModalCreate() {
       </Modal.Header>
       <Modal.Body>
         <CreateModal onSubmit={handleCreate} />
-
-        {isPending && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
-            <Alert variant="info" className="text-center">
-              <Spinner animation="border" size="sm" className="me-2" />{" "}
-              Cargando...
-            </Alert>
-          </div>
-        )}
-
-        {isError && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
+        {isErrorMutation && (
+          <div className="d-flex justify-content-center align-items-center">
             <Alert variant="danger" className="text-center" dismissible>
               Error: {error?.message || "Ocurrió un error al guardar registro."}
+              {/*<br />*/}
+              {/*error?.response && (
+                <>
+                  Respuesta del servidor: {JSON.stringify(error.response.data)}
+                </>
+              )*/}
             </Alert>
           </div>
         )}
@@ -80,9 +83,16 @@ function InventoryModalCreate() {
           variant="success"
           type="submit"
           form="create-form"
-          disabled={isPending}
+          disabled={isPendingMutation}
         >
-          {isPending ? "Guardando..." : "Guardar"}
+          {isPendingMutation ? (
+            <>
+              <Spinner animation="border" size="sm" className="me-2" />
+              Guardando...
+            </>
+          ) : (
+            "Guardar"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>

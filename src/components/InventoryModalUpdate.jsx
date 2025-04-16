@@ -1,7 +1,6 @@
-import PropTypes from "prop-types";
 import { Alert, Button, Modal, Spinner } from "react-bootstrap";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { inventoryContext } from "./InventoryManagement";
 
@@ -19,17 +18,27 @@ function InventoryModalUpdate() {
 
   const windowWidth = useWindowWidth();
 
-  const selectedId = selectedRows[0];
+  const [storedSelectedId, setStoredSelectedId] = useState(null);
+
+  useEffect(() => {
+    if (selectedRows[0]) {
+      setStoredSelectedId(selectedRows[0]);
+    }
+  }, [selectedRows]);
+
+  const selectedId = storedSelectedId;
 
   const {
     isPending,
     isError,
     data: readData,
     error,
+    isFetching,
   } = useQuery({
     queryKey: ["updateData", selectedId],
     queryFn: () => findById(selectedId),
     enabled: !!selectedId && showModalUpdate,
+    refetchOnWindowFocus: false,
   });
 
   const {
@@ -37,18 +46,19 @@ function InventoryModalUpdate() {
     isError: isErrorMutation,
     error: errorMutuation,
     mutate,
+    reset,
   } = useMutation({
     mutationFn: (data) => updateById(data, selectedId),
     onSuccess: async () => {
       await queryClient.invalidateQueries(["inventoryData"]);
       setShowModalUpdate(false);
     },
-    onError: (error) => {
-      setErrorMessage("Error al guardar el registro: " + error.message);
-    },
   });
 
-  const handleCloseModalUpdate = () => setShowModalUpdate(false);
+  const handleCloseModalUpdate = () => {
+    setShowModalUpdate(false);
+    reset();
+  };
 
   const handleUpdate = (data) => {
     mutate(data);
@@ -79,7 +89,7 @@ function InventoryModalUpdate() {
         )}
 
         {isPending && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="d-flex justify-content-center align-items-center">
             <Alert variant="info" className="text-center" dismissible>
               <Spinner animation="border" size="sm" className="me-2" />{" "}
               Cargando...
@@ -88,7 +98,7 @@ function InventoryModalUpdate() {
         )}
 
         {isError && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="d-flex justify-content-center align-items-center">
             <Alert variant="danger" className="text-center">
               Error:{" "}
               {error?.message || "Ocurrió un error al mostrar los datos."}
@@ -96,17 +106,8 @@ function InventoryModalUpdate() {
           </div>
         )}
 
-        {isPendingMutation && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
-            <Alert variant="info" className="text-center" dismissible>
-              <Spinner animation="border" size="sm" className="me-2" />{" "}
-              Cargando...
-            </Alert>
-          </div>
-        )}
-
         {isErrorMutation && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="d-flex justify-content-center align-items-center">
             <Alert variant="danger" className="text-center">
               Error:{" "}
               {errorMutuation?.message ||
@@ -123,9 +124,16 @@ function InventoryModalUpdate() {
           variant="success"
           type="submit"
           form="update-form"
-          disabled={isPending}
+          disabled={isPendingMutation}
         >
-          {isPending ? "Actualizando..." : "Actualizar"}
+          {isPendingMutation ? (
+            <>
+              <Spinner animation="border" size="sm" className="me-2" />
+              Actualizando...
+            </>
+          ) : (
+            "Actualizar"
+          )}
         </Button>
       </Modal.Footer>
     </Modal>

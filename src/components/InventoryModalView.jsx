@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Alert, Button, Modal, Spinner } from "react-bootstrap";
 import useWindowWidth from "./hooks/useWindowWidth";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { inventoryContext } from "./InventoryManagement";
 
@@ -17,20 +17,32 @@ function InventoryModalView() {
 
   const windowWidth = useWindowWidth();
 
-  const selectedId = selectedRows[0];
+  const [storedSelectedId, setStoredSelectedId] = useState(null);
+
+  useEffect(() => {
+    if (selectedRows[0]) {
+      setStoredSelectedId(selectedRows[0]);
+    }
+  }, [selectedRows]);
+
+  const selectedId = storedSelectedId;
 
   const {
     isPending,
     isError,
     data: readData,
     error,
+    reset,
   } = useQuery({
     queryKey: ["readData", selectedId],
     queryFn: () => findById(selectedId),
     enabled: !!selectedId && showModalView,
   });
 
-  const handleCloseModalView = () => setShowModalView(false);
+  const handleCloseModalView = () => {
+    setShowModalView(false);
+    reset();
+  };
 
   return (
     <Modal
@@ -55,7 +67,7 @@ function InventoryModalView() {
         {readData && <ViewModal readData={readData.data} />}
 
         {isPending && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="d-flex justify-content-center align-items-center">
             <Alert variant="info" className="text-center">
               <Spinner animation="border" size="sm" className="me-2" />{" "}
               Cargando...
@@ -64,7 +76,7 @@ function InventoryModalView() {
         )}
 
         {isError && (
-          <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="d-flex justify-content-center align-items-center">
             <Alert variant="danger" className="text-center" dismissible>
               Error: {error?.message || "Ocurrió un error al ver información."}
             </Alert>

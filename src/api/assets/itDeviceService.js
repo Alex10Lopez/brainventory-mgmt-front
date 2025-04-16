@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:9010/api/it-device";
+const API_URL = "http://localhost:8080/api/it-device";
 
 export async function saveITDevice(itDevice) {
   return await axios.post(API_URL, itDevice);
