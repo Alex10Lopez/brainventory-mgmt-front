@@ -23,7 +23,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Foto del empleado</strong>
+          <strong>Foto</strong>
           <p>
             {employeeData.image || (
               <span className="text-secondary">No disponible</span>
@@ -41,7 +41,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Nombre del empleado</strong>
+          <strong>Nombre</strong>
           <p>
             {employeeData.name || (
               <span className="text-secondary">No disponible</span>
@@ -52,7 +52,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Apellido del empleado</strong>
+          <strong>Apellido</strong>
           <p>
             {employeeData.lastname || (
               <span className="text-secondary">No disponible</span>
@@ -70,7 +70,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Fecha de nacimiento del empleado</strong>
+          <strong>Fecha de nacimiento</strong>
           <p>
             {employeeData.dateOfBirth || (
               <span className="text-secondary">No disponible</span>
@@ -81,7 +81,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Sexo del empleado</strong>
+          <strong>Sexo</strong>
           <p>
             {employeeData.sex ? (
               SexEnum[employeeData.sex]
@@ -101,7 +101,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Nacionalidad del mpleado</strong>
+          <strong>Nacionalidad</strong>
           <p>
             {employeeData.nationality || (
               <span className="text-secondary">No disponible</span>
@@ -112,7 +112,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Permisos del empleado</strong>
+          <strong>Permisos del sistema</strong>
           <p>
             {employeeData.permissions ? (
               PermissionsEnum[employeeData.permissions]
@@ -132,7 +132,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Status del empleado</strong>
+          <strong>Status</strong>
           <p>
             {employeeData.status ? (
               StatusEnum[employeeData.status]
@@ -145,7 +145,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Salario mensual del empleado</strong>
+          <strong>Salario mensual (USD)</strong>
           <p>
             {employeeData.salary ? (
               `$${employeeData.salary}`
@@ -165,7 +165,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Puesto de trabajo principal</strong>
+          <strong>Puesto principal</strong>
           <p>
             {employeeData.jobRoles?.[0]?.name || (
               <span className="text-secondary">No disponible</span>
@@ -176,7 +176,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Puesto de trabajo secundario</strong>
+          <strong>Puesto secundario</strong>
           <p>
             {employeeData.jobRoles?.[1]?.name || (
               <span className="text-secondary">No disponible</span>
@@ -194,7 +194,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Número de teléfono principal</strong>
+          <strong>Teléfono principal</strong>
           <p>
             {employeeData.contacts?.[0]?.phoneNumber || (
               <span className="text-secondary">No disponible</span>
@@ -205,7 +205,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Correo electrónico empresarial</strong>
+          <strong>Correo empresarial</strong>
           <p>
             {employeeData.contacts?.[0]?.email || (
               <span className="text-secondary">No disponible</span>
@@ -223,7 +223,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Número de teléfono secundario</strong>
+          <strong>Teléfono secundario</strong>
           <p>
             {employeeData.contacts?.[1]?.phoneNumber || (
               <span className="text-secondary">No disponible</span>
@@ -234,7 +234,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Correo electrónico personal</strong>
+          <strong>Correo personal</strong>
           <p>
             {employeeData.contacts?.[1]?.email || (
               <span className="text-secondary">No disponible</span>
@@ -263,7 +263,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Número exterior</strong>
+          <strong>Número</strong>
           <p>
             {employeeData.addresses?.[0]?.streetNumber || (
               <span className="text-secondary">No disponible</span>
@@ -292,7 +292,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Cuidad</strong>
+          <strong>Ciudad</strong>
           <p>
             {employeeData.addresses?.[0]?.city || (
               <span className="text-secondary">No disponible</span>

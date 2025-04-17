@@ -66,7 +66,9 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
           .replace(/Ñ/g, "N");
       };
 
-      const name = normalizeText(formValues.name.trim().toLowerCase());
+      const name = normalizeText(formValues.name.trim().toLowerCase()).split(
+        " "
+      );
       const lastnames = normalizeText(
         formValues.lastname.trim().toLowerCase()
       ).split(" ");
@@ -75,14 +77,14 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
 
       let email = "";
       if (lastnames.length === 1) {
-        email = `${name}.${lastnames[0]}.${randomNumber}@brainventory.com`;
+        email = `${name[0]}.${lastnames[0]}.${randomNumber}@brainventory.com`;
       } else {
         const secondLastName = lastnames[1];
         const secondInitials =
           secondLastName.length > 1
             ? secondLastName.slice(0, 2)
             : secondLastName;
-        email = `${name}.${lastnames[0]}${secondInitials}.${randomNumber}@brainventory.com`;
+        email = `${name[0]}.${lastnames[0]}${secondInitials}.${randomNumber}@brainventory.com`;
       }
 
       setValue("contacts[0].email", email);
@@ -90,10 +92,8 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
   }, [mode, formValues.name, formValues.lastname, setValue]);
 
   const handleFormSubmit = (data) => {
-    // Prepare data for submission
     const formValuesToSubmit = {
       ...data,
-      // Remove password fields if empty in update mode
       ...(mode === "update" && {
         password: data.password ? data.password : undefined,
         verifyPassword: undefined,
@@ -105,6 +105,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       showPassword: undefined,
     };
 
+    console.log(JSON.stringify(formValuesToSubmit, null, 2));
     onSubmit(formValuesToSubmit);
   };
 
@@ -457,20 +458,14 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
                   : ""
               }
               isInvalid={!!errors.jobRoles?.[1]?.id}
-              {...register("jobRoles[1].id", {
-                validate: (value) =>
-                  !value ||
-                  value === "" ||
-                  jobRoleReferences.data?.some(
-                    (role) => role.id.toString() === value
-                  ) ||
-                  "Seleccione un puesto secundario válido",
-              })}
+              {...register("jobRoles[1].id")}
             >
-              <option disabled value="">
-                {isPendingJobRole
+              <option value="">
+                {mode === "update" && readData?.jobRoles?.[1]?.id
+                  ? "Quitar puesto de trabajo"
+                  : isPendingJobRole
                   ? "Cargando puestos..."
-                  : "Ninguno (opcional)"}
+                  : "Seleccione un puesto secundario"}
               </option>
               {!isPendingJobRole &&
                 !isErrorJobRole &&

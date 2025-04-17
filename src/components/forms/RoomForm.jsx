@@ -52,11 +52,15 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
     queryFn: findAllDepartments,
   });
 
-  const formValuesToSubmit = {
-    ...formValues,
-  };
+  const handleFormSubmit = (data) => {
+    const formValuesToSubmit = {
+      ...data,
+      departments: (data.departments || []).filter(
+        (dept) => dept?.id && dept.id !== ""
+      ),
+    };
 
-  const handleFormSubmit = () => {
+    console.log(JSON.stringify(formValuesToSubmit, null, 2));
     onSubmit(formValuesToSubmit);
   };
 
@@ -66,28 +70,18 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      {/* Photo Section  */}
+      {/* Photo Section */}
       <FormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Foto</Form.Label>
+            <Form.Label>Imagen de referencia (URL)</Form.Label>
             <Form.Control
               type="text"
-              placeholder="URL de la imagen (ejemplo: https://ejemplo.com/foto.jpg)"
+              placeholder="Ejemplo: https://ejemplo.com/imagen-sala.jpg"
               defaultValue={mode === "update" ? readData?.image || "" : ""}
               isInvalid={!!errors.image}
-              {...register("image", {
-                validate: (value) => {
-                  if (!value) return true;
-                  try {
-                    new URL(value);
-                    return true;
-                  } catch {
-                    return "Ingrese una URL válida";
-                  }
-                },
-              })}
+              {...register("image")}
             />
           </>
         }
@@ -99,18 +93,18 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>Tipo de sala/espacio*</Form.Label>
             <Form.Select
               defaultValue={
                 mode === "update" ? readData?.roomType?.toString() || "" : ""
               }
               isInvalid={!!errors.roomType}
               {...register("roomType", {
-                required: "El tipo de habitación es obligatorio",
+                required: "Debe seleccionar un tipo de sala/espacio",
               })}
             >
               <option disabled value="">
-                Seleccione el tipo de habitación
+                Seleccione el tipo de sala/espacio
               </option>
               {Object.entries(RoomTypesEnum).map(([key, value]) => (
                 <option key={key} value={key}>
@@ -123,21 +117,21 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         leftError={errors.roomType?.message}
         rightContent={
           <>
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>Nombre identificador</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Nombre"
+              placeholder="Ejemplo: Sala de juntas A, Laboratorio 3"
               defaultValue={mode === "update" ? readData?.name || "" : ""}
               isInvalid={!!errors.name}
               {...register("name", {
                 maxLength: {
                   value: 50,
-                  message: "El nombre no puede exceder los 50 caracteres",
+                  message: "Máximo 50 caracteres permitidos",
                 },
                 pattern: {
-                  value: /^[\p{L}\s'-]+$/u,
+                  value: /^[\p{L}\d\s'-]+$/u,
                   message:
-                    "El nombre solo puede contener letras, espacios, guiones y apóstrofes",
+                    "Solo letras, números, espacios, guiones y apóstrofes",
                 },
               })}
             />
@@ -151,14 +145,16 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Número de la habitación</Form.Label>
+            <Form.Label>Número de sala</Form.Label>
             <Form.Select
               defaultValue={mode === "update" ? readData?.number || "" : ""}
               isInvalid={!!errors.number}
               {...register("number")}
             >
-              <option disabled value="">
-                Seleccione el número de la habitación
+              <option value="">
+                {mode === "update" && readData?.number
+                  ? "Eliminar número asignado"
+                  : "Seleccione un número o deje en blanco"}
               </option>
               {roomNumbers.map((roomNumber, index) => (
                 <option key={index} value={roomNumber}>
@@ -170,39 +166,54 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightContent={
           <>
-            <Form.Label>Capacidad máxima de la habitación</Form.Label>
+            <Form.Label>Capacidad máxima de personas</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Ingrese la capacidad máxima de la habitación"
+              type="number"
+              min="0"
+              max="1000"
+              placeholder="Ejemplo: 20"
               defaultValue={
                 mode === "update" ? readData?.capacityMax || "" : ""
               }
               isInvalid={!!errors.capacityMax}
-              {...register("capacityMax")}
+              {...register("capacityMax", {
+                min: {
+                  value: 0,
+                  message: "El valor mínimo es 0",
+                },
+                max: {
+                  value: 50,
+                  message: "El valor máximo permitido es 50",
+                },
+                pattern: {
+                  value: /^\d+$/,
+                  message: "Solo números enteros positivos",
+                },
+              })}
             />
           </>
         }
         rightError={errors.capacityMax?.message}
       />
 
-      {/* Room number and Max capacity */}
+      {/* Building and Floor label */}
       <FormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Edificio</Form.Label>
+            <Form.Label>Edificio*</Form.Label>
             <Form.Select
               defaultValue={
                 mode === "update" ? readData?.building?.id.toString() || "" : ""
               }
               isInvalid={!!errors.building?.id}
               {...register("building.id", {
-                required: "El edificio es obligatorio",
+                required: "Debe seleccionar un edificio",
               })}
             >
               <option disabled value="">
                 {isPendingBuilding
-                  ? "Cargando edificios..."
+                  ? "Cargando lista de edificios..."
                   : "Seleccione el edificio"}
               </option>
               {!isPendingBuilding &&
@@ -213,22 +224,133 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
                   </option>
                 ))}
             </Form.Select>
+            {isErrorBuilding && (
+              <Alert key="warning" variant="warning" className="mt-2 p-2">
+                Error al cargar los edificios: {errorBuilding.message}
+              </Alert>
+            )}
           </>
         }
-        leftError={errors.building?.id}
+        leftError={errors.building?.id?.message}
         rightContent={
           <>
-            <Form.Label>Nivel de piso</Form.Label>
+            <Form.Label>Nivel/Piso*</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Ingrese el nivel de piso"
+              placeholder="Ejemplo: Planta Baja, Piso 3, Sótano 1"
               defaultValue={mode === "update" ? readData?.floorLabel || "" : ""}
-              isInvalid={!!errors.image}
-              {...register("floorLabel")}
+              isInvalid={!!errors.floorLabel}
+              {...register("floorLabel", {
+                required: "Debe especificar el nivel/piso",
+                maxLength: {
+                  value: 50,
+                  message: "Máximo 50 caracteres permitidos",
+                },
+                pattern: {
+                  value: /^[\p{L}\d\s-]+$/u,
+                  message: "Solo letras, números, espacios y guiones",
+                },
+              })}
             />
           </>
         }
         rightError={errors.floorLabel?.message}
+      />
+
+      {/* Description */}
+      <FormSection
+        windowWidth={windowWidth}
+        leftContent={
+          <>
+            <Form.Label>Descripción detallada</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Ejemplo: Sala equipada con proyector, 20 sillas y mesa de reuniones. Acceso para personas con movilidad reducida."
+              defaultValue={
+                mode === "update" ? readData?.description || "" : ""
+              }
+              isInvalid={!!errors.description}
+              {...register("description", {
+                maxLength: {
+                  value: 500,
+                  message: "Máximo 500 caracteres permitidos",
+                },
+              })}
+            />
+          </>
+        }
+        leftError={errors.description?.message}
+      />
+
+      {/* Departments */}
+      <FormSection
+        windowWidth={windowWidth}
+        leftContent={
+          <>
+            <Form.Label>Departamento/Área 1</Form.Label>
+            <Form.Select
+              defaultValue={
+                mode === "update"
+                  ? readData?.departments?.[0]?.id?.toString() || ""
+                  : ""
+              }
+              isInvalid={!!errors.departments?.[0]?.id}
+              {...register("departments[0].id", {
+                required: "Debe seleccionar al menos un departamento/área",
+              })}
+            >
+              <option disabled value="">
+                {isPendingDepartment
+                  ? "Cargando departamentos..."
+                  : "Seleccione departamento/área 1"}
+              </option>
+              {!isPendingDepartment &&
+                !isErrorDepartment &&
+                departmentReferences.data?.map((department) => (
+                  <option key={department.id} value={department.id}>
+                    {department.name}
+                  </option>
+                ))}
+            </Form.Select>
+            {isErrorDepartment && (
+              <Alert key="warning" variant="warning" className="mt-2 p-2">
+                Error al cargar departamentos: {errorDepartment.message}
+              </Alert>
+            )}
+          </>
+        }
+        leftError={errors.departments?.[0]?.id?.message}
+        rightContent={
+          <>
+            <Form.Label>Departamento/Área secundario</Form.Label>
+            <Form.Select
+              defaultValue={
+                mode === "update"
+                  ? readData?.departments?.[1]?.id?.toString() || ""
+                  : ""
+              }
+              isInvalid={!!errors.departments?.[1]?.id}
+              {...register("departments[1].id")}
+            >
+              <option value="">
+                {mode === "update" && readData?.departments?.[1]?.id
+                  ? "Quitar departamento secundario"
+                  : isPendingDepartment
+                  ? "Cargando departamentos..."
+                  : "Seleccione el departamento/área 2 (opcional)"}
+              </option>
+              {!isPendingDepartment &&
+                !isErrorDepartment &&
+                departmentReferences.data?.map((department) => (
+                  <option key={department.id} value={department.id}>
+                    {department.name}
+                  </option>
+                ))}
+            </Form.Select>
+          </>
+        }
+        rightError={errors.departments?.[1]?.id?.message}
       />
     </Form>
   );

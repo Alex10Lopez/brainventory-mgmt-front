@@ -19,7 +19,7 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Foto de la habitación</strong>
+          <strong>Imagen de referencia</strong>
           <p>
             {roomData.image || (
               <span className="text-secondary">No disponible</span>
@@ -37,7 +37,7 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Tipo de habitación</strong>
+          <strong>Tipo de sala/espacio</strong>
           <p>
             {roomData.roomType ? (
               RoomTypesEnum[roomData.roomType]
@@ -50,7 +50,7 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Nombre de la habitación</strong>
+          <strong>Nombre identificador</strong>
           <p>
             {roomData.name || (
               <span className="text-secondary">No disponible</span>
@@ -68,9 +68,9 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Capacidad máxima</strong>
+          <strong>Número de sala</strong>
           <p>
-            {roomData.capacityMax || (
+            {roomData.number || (
               <span className="text-secondary">No disponible</span>
             )}
           </p>
@@ -78,6 +78,24 @@ const RoomView = ({ readData }) => {
 
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
+        >
+          <strong>Capacidad máxima de personas</strong>
+          <p>
+            {roomData.capacityMax || (
+              <span className="text-secondary">No disponible</span>
+            )}
+          </p>
+        </div>
+      </Container>
+
+      <Container
+        fluid
+        className={`details-section d-flex ${
+          windowWidth < 576 ? "flex-column" : "flex-row justify-content-between"
+        } px-0 w-100`}
+      >
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
           <strong>Edificio</strong>
           <p>
@@ -86,6 +104,17 @@ const RoomView = ({ readData }) => {
             )}
           </p>
         </div>
+
+        <div
+          className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
+        >
+          <strong>Nivel/Piso</strong>
+          <p>
+            {roomData.floorLabel || (
+              <span className="text-secondary">No disponible</span>
+            )}
+          </p>
+        </div>
       </Container>
 
       <Container
@@ -97,9 +126,9 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Nivel de piso</strong>
+          <strong>Descripción detallada</strong>
           <p>
-            {roomData.floorLabel || (
+            {roomData.description || (
               <span className="text-secondary">No disponible</span>
             )}
           </p>
@@ -107,14 +136,7 @@ const RoomView = ({ readData }) => {
 
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
-        >
-          <strong>Descripción</strong>
-          <p>
-            {roomData.description || (
-              <span className="text-secondary">No disponible</span>
-            )}
-          </p>
-        </div>
+        ></div>
       </Container>
 
       <Container
@@ -126,7 +148,7 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Dapartamentos presentes</strong>
+          <strong>Departamentos/Áreas</strong>
           {roomData.departments.length > 0 ? (
             <ul>
               {roomData.departments.map((dept, index) => (

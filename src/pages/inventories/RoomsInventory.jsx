@@ -1,8 +1,6 @@
 import InventoryManagement from "../../components/InventoryManagement";
 import NavigationBar from "../../components/NavigationBar";
 import RoomTableColumns from "../../components/columns/RoomTableColumns";
-import RoomCreateForm from "../../components/forms/createForm/RoomCreateForm";
-import RoomUpdateForm from "../../components/forms/updateForm/RoomUpdateForm";
 import RoomView from "../../components/views/RoomView";
 import {
   saveRoom,
@@ -20,10 +18,10 @@ function RoomsInventory() {
     <>
       <NavigationBar />
       <h1 className="text-center text-primary mt-3">
-        Inventario de Habitaciones
+        Inventario de Salas/espacios
       </h1>
       <InventoryManagement
-        titleInventory="Habitación"
+        titleInventory="Sala/espacio"
         createRecord={saveRoom}
         findAll={findAll}
         findById={findById}

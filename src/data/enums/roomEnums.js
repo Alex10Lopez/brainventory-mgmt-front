@@ -4,8 +4,6 @@ export const RoomTypesEnum = {
   CUBICLE: "Cubículo",
   MEETING_ROOM: "Sala de juntas",
   CONFERENCE_ROOM: "Sala de conferencias",
-  HR_OFFICE: "Oficina de recursos humanos",
-  FINANCE_OFFICE: "Oficina de finanzas",
   CALL_CENTER: "Centro de llamadas",
   RECEPTION: "Recepción",
   WAITING_AREA: "Sala de espera",

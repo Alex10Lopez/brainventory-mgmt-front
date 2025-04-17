@@ -36,20 +36,30 @@ const RoomTableColumns = () => {
       accessorFn: (row) => String(row.id),
     },
     {
-      header: "Nombre de la oficina",
+      header: "Nombre de la sala/espacio",
       accessorFn: (row) => {
         const roomType = row.original.roomType;
         const roomName = row.original.name;
+        const roomNumber = row.original.number;
         const roomTypeLabel = RoomTypesEnum[roomType] || roomType;
 
-        return roomName ? `${roomTypeLabel} - ${roomName}` : roomTypeLabel;
+        let result = roomTypeLabel;
+        if (roomName) result += ` - ${roomName}`;
+        if (roomNumber) result += ` - ${roomNumber}`;
+
+        return result;
       },
       cell: ({ row }) => {
         const roomType = row.original.roomType;
         const roomName = row.original.name;
+        const roomNumber = row.original.number;
         const roomTypeLabel = RoomTypesEnum[roomType] || roomType;
 
-        return roomName ? `${roomTypeLabel} - ${roomName}` : roomTypeLabel;
+        let result = roomTypeLabel;
+        if (roomName) result += ` - ${roomName}`;
+        if (roomNumber) result += ` - ${roomNumber}`;
+
+        return result;
       },
     },
     {
@@ -63,6 +73,7 @@ const RoomTableColumns = () => {
     { header: "Nivel de piso", accessorKey: "floorLabel" },
     {
       header: "Departamentos",
+      accessorKey: "departments",
       cell: ({ row }) => {
         const departments = row.original.departments;
         if (!departments || departments.length === 0) {

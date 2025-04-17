@@ -63,9 +63,21 @@ const EmployeeTableColumns = () => {
       },
     },
     {
-      header: "Puesto de trabajo",
-      accessorFn: (row) =>
-        row.jobRoles.length > 0 ? row.jobRoles?.[0]?.name : "-",
+      header: "Puestos de trabajo",
+      accessorKey: "jobRoles",
+      cell: ({ row }) => {
+        const jobRoles = row.original.jobRoles;
+        if (!jobRoles || jobRoles.length === 0) {
+          return "-";
+        }
+        return (
+          <ul style={{ margin: 0, paddingLeft: "20px" }}>
+            {jobRoles.map((jobRole, index) => (
+              <li key={index}>{jobRole.name}</li>
+            ))}
+          </ul>
+        );
+      },
     },
     {
       header: "Estado",
