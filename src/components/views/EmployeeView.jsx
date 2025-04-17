@@ -23,7 +23,7 @@ const EmployeeView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Foto</strong>
+          <strong>Foto del empleado</strong>
           <p>
             {employeeData.image || (
               <span className="text-secondary">No disponible</span>

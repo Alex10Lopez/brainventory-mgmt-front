@@ -33,7 +33,6 @@ function InventoryModalUpdate() {
     isError,
     data: readData,
     error,
-    isFetching,
   } = useQuery({
     queryKey: ["updateData", selectedId],
     queryFn: () => findById(selectedId),

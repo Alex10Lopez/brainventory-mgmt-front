@@ -19,7 +19,7 @@ const RoomView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Imagen de referencia</strong>
+          <strong>Foto de la sala/espacio</strong>
           <p>
             {roomData.image || (
               <span className="text-secondary">No disponible</span>

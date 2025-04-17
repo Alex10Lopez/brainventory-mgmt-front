@@ -75,7 +75,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Imagen de referencia (URL)</Form.Label>
+            <Form.Label>Foto de la sala/espacio</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ejemplo: https://ejemplo.com/imagen-sala.jpg"
@@ -178,8 +178,8 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
               isInvalid={!!errors.capacityMax}
               {...register("capacityMax", {
                 min: {
-                  value: 0,
-                  message: "El valor mínimo es 0",
+                  value: 1,
+                  message: "El valor mínimo es 1",
                 },
                 max: {
                   value: 50,
@@ -262,7 +262,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Descripción detallada</Form.Label>
+            <Form.Label>Descripción de la sala/espacio</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}

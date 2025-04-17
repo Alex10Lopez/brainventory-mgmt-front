@@ -36,7 +36,7 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "pe-2"} w-100`}
         >
-          <strong>Nombre del edificio</strong>
+          <strong>Nombre</strong>
           <p>
             {buildingData.name || (
               <span className="text-secondary">No disponible</span>
@@ -47,7 +47,7 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Número de pisos del edificio</strong>
+          <strong>Número de pisos</strong>
           <p>
             {buildingData.numberOfFloors || (
               <span className="text-secondary">No disponible</span>
@@ -98,7 +98,7 @@ const BuildingView = ({ readData }) => {
         <div
           className={`detail-column mb-3 ${windowWidth >= 576 && "ps-2"} w-100`}
         >
-          <strong>Número exterior</strong>
+          <strong>Número</strong>
           <p>
             {buildingData.address?.streetNumber || (
               <span className="text-secondary">No disponible</span>

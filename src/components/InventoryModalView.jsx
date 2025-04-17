@@ -32,7 +32,6 @@ function InventoryModalView() {
     isError,
     data: readData,
     error,
-    reset,
   } = useQuery({
     queryKey: ["readData", selectedId],
     queryFn: () => findById(selectedId),
@@ -41,7 +40,6 @@ function InventoryModalView() {
 
   const handleCloseModalView = () => {
     setShowModalView(false);
-    reset();
   };
 
   return (

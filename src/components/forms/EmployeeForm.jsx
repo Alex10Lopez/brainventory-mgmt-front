@@ -120,23 +120,13 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Foto</Form.Label>
+            <Form.Label>Foto del empleado</Form.Label>
             <Form.Control
               type="text"
               placeholder="URL de la imagen (ejemplo: https://ejemplo.com/foto.jpg)"
               defaultValue={mode === "update" ? readData?.image || "" : ""}
               isInvalid={!!errors.image}
-              {...register("image", {
-                validate: (value) => {
-                  if (!value) return true;
-                  try {
-                    new URL(value);
-                    return true;
-                  } catch {
-                    return "Ingrese una URL válida";
-                  }
-                },
-              })}
+              {...register("image")}
             />
           </>
         }

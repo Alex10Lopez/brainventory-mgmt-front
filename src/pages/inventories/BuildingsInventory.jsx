@@ -1,9 +1,8 @@
 import InventoryManagement from "../../components/InventoryManagement";
 import NavigationBar from "../../components/NavigationBar";
 import BuildingTableColumns from "../../components/columns/BuildingTableColumns";
-import BuildingCreateForm from "../../components/forms/createForm/BuildingCreateForm";
-import BuildingUpdateForm from "../../components/forms/updateForm/BuildingUpdateForm";
 import BuildingView from "../../components/views/BuildingView";
+import BuildingForm from "../../components/forms/BuildingForm";
 import {
   saveBuilding,
   findAll,
@@ -27,9 +26,13 @@ function BuildingsInventory() {
         updateById={updateBuilding}
         deleteById={deleteBuilding}
         tableColumns={tableColumns}
-        CreateModal={BuildingCreateForm}
+        CreateModal={({ onSubmit }) => (
+          <BuildingForm mode="create" onSubmit={onSubmit} />
+        )}
         ViewModal={BuildingView}
-        UpdateModal={BuildingUpdateForm}
+        UpdateModal={({ readData, onSubmit }) => (
+          <BuildingForm mode="update" readData={readData} onSubmit={onSubmit} />
+        )}
       />
     </>
   );
