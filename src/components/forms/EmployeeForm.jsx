@@ -1,4 +1,4 @@
-import { Form } from "react-bootstrap";
+import { Form, Alert } from "react-bootstrap";
 import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
 import countriesEs from "../../data/constants/countriesEs";
@@ -11,7 +11,7 @@ import {
 import { findAllJobRole } from "../../api/humanResources/jobRoleService";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import FormSection from "../FormSection";
+import InventoryFormSection from "../InventoryFormSection";
 
 const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
@@ -23,6 +23,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
     control,
     reset,
     setValue,
+    getValues,
   } = useForm();
 
   // Reset form with initial data when in update mode
@@ -47,7 +48,12 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
     queryFn: findAllJobRole,
   });
 
-  // Watch password fields
+  const secondaryJobRole = useWatch({ control, name: "jobRoles[1].id" });
+  const hasInitialSecondaryRole =
+    mode === "update" && readData?.jobRoles?.[1]?.id;
+  const disableSecondaryPlaceholder =
+    !secondaryJobRole && !hasInitialSecondaryRole;
+
   const password = useWatch({ control, name: "password", defaultValue: "" });
   const showPassword = useWatch({
     control,
@@ -91,16 +97,24 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
     }
   }, [mode, formValues.name, formValues.lastname, setValue]);
 
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = () => {
+    const formData = getValues();
+
     const formValuesToSubmit = {
-      ...data,
+      ...formData,
       ...(mode === "update" && {
-        password: data.password ? data.password : undefined,
+        password: formData.password ? formData.password : undefined,
         verifyPassword: undefined,
       }),
-      jobRoles: (data.jobRoles || []).filter((role) => role.id !== ""),
-      contacts: (data.contacts || []).filter(
-        (contact) => contact.phoneNumber || contact.email
+      jobRoles: (formData.jobRoles || [])
+        .filter((role) => role.id !== "")
+        .filter(
+          (role, index) => mode === "update" || index === 0 || role.id !== ""
+        ),
+      contacts: (formData.contacts || []).filter(
+        (contact, index) =>
+          (index === 0 ? contact.phoneNumber : true) &&
+          (!contact || contact.phoneNumber || contact.email)
       ),
       showPassword: undefined,
     };
@@ -116,7 +130,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       onSubmit={handleSubmit(handleFormSubmit)}
     >
       {/* Photo Section  */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -134,7 +148,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Name Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -201,7 +215,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Birth Date and Sex Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -282,7 +296,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Nationality and Permissions Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -338,7 +352,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Status and Salary Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -396,16 +410,14 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Job Roles Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
             <Form.Label>Puesto principal</Form.Label>
             <Form.Select
               defaultValue={
-                mode === "update"
-                  ? readData?.jobRoles?.[0]?.id?.toString() || ""
-                  : ""
+                mode === "update" ? readData?.jobRoles?.[0]?.id || "" : ""
               }
               isInvalid={!!errors.jobRoles?.[0]?.id}
               {...register("jobRoles[0].id", {
@@ -450,12 +462,12 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
               isInvalid={!!errors.jobRoles?.[1]?.id}
               {...register("jobRoles[1].id")}
             >
-              <option value="">
-                {mode === "update" && readData?.jobRoles?.[1]?.id
-                  ? "Quitar puesto de trabajo"
-                  : isPendingJobRole
+              <option disabled={disableSecondaryPlaceholder} value="">
+                {isPendingJobRole
                   ? "Cargando puestos..."
-                  : "Seleccione un puesto secundario"}
+                  : secondaryJobRole || hasInitialSecondaryRole
+                  ? "Quitar puesto secundario"
+                  : "Seleccione el puesto secundario"}
               </option>
               {!isPendingJobRole &&
                 !isErrorJobRole &&
@@ -476,7 +488,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Primary Contact Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -514,12 +526,8 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
             <Form.Label>Correo empresarial</Form.Label>
             <Form.Control
               type="email"
-              disabled={mode === "create"}
-              placeholder={
-                mode === "create"
-                  ? "Se generará automáticamente"
-                  : "Correo empresarial"
-              }
+              disabled
+              placeholder={"Se generará automáticamente"}
               defaultValue={
                 mode === "update" ? readData?.contacts?.[0]?.email || "" : ""
               }
@@ -530,7 +538,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Secondary Contact Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -606,7 +614,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address Street Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -670,7 +678,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address Postal Code and City Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -735,7 +743,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address State and Country Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -797,7 +805,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address Reference Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -832,7 +840,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       {/* Password Section */}
       {mode === "create" ? (
         <>
-          <FormSection
+          <InventoryFormSection
             windowWidth={windowWidth}
             leftContent={
               <>
@@ -882,7 +890,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         </>
       ) : (
         <>
-          <FormSection
+          <InventoryFormSection
             windowWidth={windowWidth}
             leftContent={
               <>
@@ -938,7 +946,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       )}
 
       {/* Show Password Checkbox - sin cambios */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>

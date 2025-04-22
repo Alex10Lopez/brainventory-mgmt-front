@@ -5,7 +5,7 @@ import { findAllDepartments } from "../../api/infrastructure/departmentService";
 import { useQuery } from "@tanstack/react-query";
 import { RoomTypesEnum } from "../../data/enums/roomEnums";
 import { roomNumbers } from "../../data/constants/roomNumbers";
-import FormSection from "../FormSection";
+import InventoryFormSection from "../InventoryFormSection";
 import useWindowWidth from "../hooks/useWindowWidth";
 import { useEffect } from "react";
 
@@ -16,9 +16,9 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
     register,
     handleSubmit,
     formState: { errors },
-    control,
     reset,
-    setValue,
+    getValues,
+    control,
   } = useForm();
 
   // Reset form with initial data when in update mode
@@ -27,11 +27,6 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       reset(readData);
     }
   }, [mode, readData, reset]);
-
-  const formValues = useWatch({
-    control,
-  });
-
   const {
     isPending: isPendingBuilding,
     isError: isErrorBuilding,
@@ -52,11 +47,25 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
     queryFn: findAllDepartments,
   });
 
-  const handleFormSubmit = (data) => {
+  const numberRoom = useWatch({ control, name: "number" });
+  const hasInitialNumber = mode === "update" && readData?.number;
+  const disableNumberPlaceholder = !numberRoom && !hasInitialNumber;
+
+  const secondaryDepartment = useWatch({ control, name: "departments[1].id" });
+  const hasInitialSecondaryDepartment =
+    mode === "update" && readData?.departments?.[1]?.id;
+  const disableSecondaryPlaceholder =
+    !secondaryDepartment && !hasInitialSecondaryDepartment;
+
+  const handleFormSubmit = () => {
+    const formData = getValues();
+
     const formValuesToSubmit = {
-      ...data,
-      departments: (data.departments || []).filter(
-        (dept) => dept?.id && dept.id !== ""
+      ...formData,
+      departments: (formData.departments || []).filter(
+        (dept, index) =>
+          (index === 0 ? dept?.id && dept.id !== "" : true) &&
+          (index !== 0 ? !dept || (dept.id && dept.id !== "") : true)
       ),
     };
 
@@ -71,7 +80,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       onSubmit={handleSubmit(handleFormSubmit)}
     >
       {/* Photo Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -89,11 +98,11 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Room Type and Name Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Tipo de sala/espacio*</Form.Label>
+            <Form.Label>Tipo de sala/espacio</Form.Label>
             <Form.Select
               defaultValue={
                 mode === "update" ? readData?.roomType?.toString() || "" : ""
@@ -141,7 +150,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Room number and Max capacity */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -151,10 +160,10 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
               isInvalid={!!errors.number}
               {...register("number")}
             >
-              <option value="">
-                {mode === "update" && readData?.number
-                  ? "Eliminar número asignado"
-                  : "Seleccione un número o deje en blanco"}
+              <option disabled={disableNumberPlaceholder} value="">
+                {numberRoom || hasInitialNumber
+                  ? "Quitar número asignado"
+                  : "Seleccione un número"}
               </option>
               {roomNumbers.map((roomNumber, index) => (
                 <option key={index} value={roomNumber}>
@@ -197,11 +206,11 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Building and Floor label */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Edificio*</Form.Label>
+            <Form.Label>Edificio</Form.Label>
             <Form.Select
               defaultValue={
                 mode === "update" ? readData?.building?.id.toString() || "" : ""
@@ -234,7 +243,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         leftError={errors.building?.id?.message}
         rightContent={
           <>
-            <Form.Label>Nivel/Piso*</Form.Label>
+            <Form.Label>Nivel/Piso</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ejemplo: Planta Baja, Piso 3, Sótano 1"
@@ -258,7 +267,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Description */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -284,7 +293,7 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Departments */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -333,11 +342,11 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
               isInvalid={!!errors.departments?.[1]?.id}
               {...register("departments[1].id")}
             >
-              <option value="">
-                {mode === "update" && readData?.departments?.[1]?.id
-                  ? "Quitar departamento secundario"
-                  : isPendingDepartment
+              <option disabled={disableSecondaryPlaceholder} value="">
+                {isPendingDepartment
                   ? "Cargando departamentos..."
+                  : secondaryDepartment || hasInitialSecondaryDepartment
+                  ? "Quitar departamento secundario"
                   : "Seleccione el departamento/área 2 (opcional)"}
               </option>
               {!isPendingDepartment &&

@@ -54,7 +54,7 @@ function InventoryModalView() {
           : "modal-80w"
       }
       centered
-      className="form-modal"
+      className="view-modal"
     >
       <Modal.Header closeButton>
         <Modal.Title className="text-primary">

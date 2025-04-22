@@ -1,6 +1,6 @@
 import { Form, Container } from "react-bootstrap";
 
-const FormSection = ({
+const InventoryFormSection = ({
   leftContent,
   rightContent,
   leftError,
@@ -43,4 +43,4 @@ const FormSection = ({
   );
 };
 
-export default FormSection;
+export default InventoryFormSection;

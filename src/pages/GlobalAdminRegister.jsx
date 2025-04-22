@@ -1,15 +1,13 @@
 import { Button, Card, Alert, Container, Spinner } from "react-bootstrap";
-import { login } from "../api/authAdmin/authService";
-import LoginForm from "../components/forms/LoginForm";
+import { register } from "../api/authAdmin/authService";
+import GlobalAdminForm from "../components/forms/GlobalAdminForm";
 import useWindowWidth from "../components/hooks/useWindowWidth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ContentFormSection from "../components/ContentFormSection";
-import { useNavigate } from "react-router-dom";
 
-const EmployeeLogin = () => {
+const GlobalAdminRegister = () => {
   const windowWidth = useWindowWidth();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const {
     isPending: isPendingMutation,
@@ -18,27 +16,27 @@ const EmployeeLogin = () => {
     mutate,
     reset,
   } = useMutation({
-    mutationFn: login,
-    onSuccess: async (data) => {
-      await queryClient.invalidateQueries(["employeeLogin"]);
-      navigate("/");
+    mutationFn: register,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["globalAdminRegister"]);
     },
   });
 
   const handleCreate = (data) => {
     mutate(data);
   };
+
   return (
     <ContentFormSection
       windowWidth={windowWidth}
       contentHeader={
         <h1 className="card-header-admin-register text-center text-primary">
-          Inicio de Sesión
+          Registro de Administrador Global
         </h1>
       }
       contentBody={
         <>
-          <LoginForm onSubmit={handleCreate} />
+          <GlobalAdminForm onSubmit={handleCreate} />
           {isErrorMutation && (
             <div className="d-flex justify-content-center align-items-center">
               <Alert variant="danger" className="text-center" dismissible>
@@ -66,10 +64,10 @@ const EmployeeLogin = () => {
           {isPendingMutation ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />
-              Iniciando Sesión...
+              Registrando...
             </>
           ) : (
-            "Iniciar Sesión"
+            "Registrar"
           )}
         </Button>
       }
@@ -77,4 +75,4 @@ const EmployeeLogin = () => {
   );
 };
 
-export default EmployeeLogin;
+export default GlobalAdminRegister;

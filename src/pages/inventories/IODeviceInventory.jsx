@@ -1,8 +1,6 @@
 import InventoryManagement from "../../components/InventoryManagement";
 import NavigationBar from "../../components/NavigationBar";
 import IODevicesColumns from "../../components/columns/IODevicesColumns";
-import IODeviceCreateForm from "../../components/forms/createForm/IODeviceCreateForm";
-import IODeviceUpdateForm from "../../components/forms/updateForm/IODeviceUpdateForm";
 import IODeviceView from "../../components/views/IODeviceView";
 import {
   saveIODevice,
@@ -11,6 +9,7 @@ import {
   updateIODevice,
   deleteIODevice,
 } from "../../api/assets/ioDeviceService";
+import IODeviceForm from "../../components/forms/IODeviceForm";
 
 function IODeviceInventory() {
   const tableColumns = IODevicesColumns();
@@ -29,9 +28,13 @@ function IODeviceInventory() {
         updateById={updateIODevice}
         deleteById={deleteIODevice}
         tableColumns={tableColumns}
-        CreateModal={IODeviceCreateForm}
+        CreateModal={({ onSubmit }) => (
+          <IODeviceForm mode="create" onSubmit={onSubmit} />
+        )}
         ViewModal={IODeviceView}
-        UpdateModal={IODeviceUpdateForm}
+        UpdateModal={({ readData, onSubmit }) => (
+          <IODeviceForm mode="update" readData={readData} onSubmit={onSubmit} />
+        )}
       />
     </>
   );

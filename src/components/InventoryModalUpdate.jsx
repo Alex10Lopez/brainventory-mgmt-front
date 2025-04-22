@@ -107,10 +107,14 @@ function InventoryModalUpdate() {
 
         {isErrorMutation && (
           <div className="d-flex justify-content-center align-items-center">
-            <Alert variant="danger" className="text-center">
-              Error:{" "}
-              {errorMutuation?.message ||
-                "Ocurrió un error al actualizar registro."}
+            <Alert variant="danger" className="text-center" dismissible>
+              Error: {error?.message || "Ocurrió un error al guardar registro."}
+              {/*<br />*/}
+              {/*error?.response && (
+                <>
+                  Respuesta del servidor: {JSON.stringify(error.response.data)}
+                </>
+              )*/}
             </Alert>
           </div>
         )}

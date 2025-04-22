@@ -1,23 +1,22 @@
 import { Form, Alert } from "react-bootstrap";
 import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
-import { useEffect } from "react";
 import {
-  findAllITDeviceNames,
   findAllHardwareBrands,
-  findAllITDeviceLines,
   findAllHardwareSeries,
+  findAllIODeviceLines,
+  findAllIODeviceNames,
 } from "../../api/assets/hardwareService";
-import { findAllRooms } from "../../api/infrastructure/roomService";
+import { findAllITDevices } from "../../api/assets/itDeviceService";
 import {
   PhysicalStatusEnum,
   OperationalStatusEnum,
 } from "../../data/enums/hardwareEnums";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import InventoryFormSection from "../InventoryFormSection";
-import { RoomTypesEnum } from "../../data/enums/roomEnums";
 
-const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
+const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
 
   const {
@@ -29,6 +28,12 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
     control,
   } = useForm();
 
+  // Watch purchase date for warranty validation using useWatch
+  const purchaseDate = useWatch({
+    control,
+    name: "hardwareDetails.purchaseDate",
+  });
+
   // Reset form with initial data when in update mode
   useEffect(() => {
     if (mode === "update" && readData) {
@@ -37,13 +42,13 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
   }, [mode, readData, reset]);
 
   const {
-    isPending: isPendingITDeviceName,
-    isError: isErrorITDeviceName,
-    data: itDeviceNameReferences,
-    error: errorITDeviceName,
+    isPending: isPendingIODeviceName,
+    isError: isErrorIODeviceName,
+    data: ioDeviceNameReferences,
+    error: errorIODeviceName,
   } = useQuery({
-    queryKey: ["itDeviceNamesReferences"],
-    queryFn: findAllITDeviceNames,
+    queryKey: ["ioDeviceNamesReferences"],
+    queryFn: findAllIODeviceNames,
   });
 
   const {
@@ -57,13 +62,13 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
   });
 
   const {
-    isPending: isPendingITDeviceLine,
-    isError: isErrorITDeviceLine,
-    data: itDeviceLineReferences,
-    error: errorITDeviceLine,
+    isPending: isPendingIODeviceLine,
+    isError: isErrorIODeviceLine,
+    data: ioDeviceLineReferences,
+    error: errorIODeviceLine,
   } = useQuery({
-    queryKey: ["itDeviceLineReferences"],
-    queryFn: findAllITDeviceLines,
+    queryKey: ["ioDeviceLineReferences"],
+    queryFn: findAllIODeviceLines,
   });
 
   const {
@@ -77,31 +82,35 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
   });
 
   const {
-    isPending: isPendingRoom,
-    isError: isErrorRoom,
-    data: roomReferences,
-    error: errorRoom,
+    isPending: isPendingIIDevice,
+    isError: isErrorIIDevice,
+    data: itDeviceReferences,
+    error: errorIIDevice,
   } = useQuery({
-    queryKey: ["roomReferences"],
-    queryFn: findAllRooms,
+    queryKey: ["itDeviceReferences"],
+    queryFn: findAllITDevices,
   });
 
-  const roomItDevice = useWatch({
+  const itDevice = useWatch({
     control,
-    name: "room.id",
+    name: "itDevice.id",
   });
-  const hasInitialRoom = mode === "update" && readData?.room?.id;
-  const disableRoomPlaceholder = !roomItDevice && !hasInitialRoom;
-
-  const purchaseDate = useWatch({
-    control,
-    name: "hardwareDetails.purchaseDate",
-  });
+  const hasInitialItDevice = mode === "update" && readData?.itDevice?.id;
+  const disableItDevicePlaceholder = !itDevice && !hasInitialItDevice;
 
   const handleFormSubmit = () => {
     const formData = getValues();
-    console.log(JSON.stringify(formData, null, 2));
-    onSubmit(formData);
+
+    const formValuesToSubmit = {
+      ...formData,
+      itDevice:
+        formData.itDevice && formData.itDevice.id !== ""
+          ? { id: formData.itDevice.id }
+          : null,
+    };
+
+    console.log(JSON.stringify(formValuesToSubmit, null, 2));
+    onSubmit(formValuesToSubmit);
   };
 
   return (
@@ -110,25 +119,18 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      {/* Photo Section */}
+      {/* Photo Section  */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Imagen del dispositivo</Form.Label>
+            <Form.Label>Foto del dispositivo TI</Form.Label>
             <Form.Control
               type="text"
-              placeholder="URL completa de la imagen (ejemplo: https://ejemplo.com/imagen.jpg)"
+              placeholder="URL de la imagen (ejemplo: https://ejemplo.com/foto.jpg)"
               defaultValue={mode === "update" ? readData?.image || "" : ""}
               isInvalid={!!errors.image}
-              {...register("image", {
-                pattern: {
-                  value:
-                    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?\.(jpg|jpeg|png|gif|webp)$/i,
-                  message:
-                    "Debe ser una URL válida de imagen (jpg, png, gif, webp)",
-                },
-              })}
+              {...register("image")}
             />
           </>
         }
@@ -154,25 +156,25 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
               })}
             >
               <option disabled value="">
-                {isPendingITDeviceName
+                {isPendingIODeviceName
                   ? "Cargando tipos de dispositivos..."
-                  : "Seleccione un tipo (ej: Laptop, Servidor, etc.)"}
+                  : "Seleccione un tipo (ej: Monito, Mouse, Keyboard.)"}
               </option>
-              {!isPendingITDeviceName &&
-                !isErrorITDeviceName &&
-                itDeviceNameReferences.data?.map((itDeviceName) => (
+              {!isPendingIODeviceName &&
+                !isErrorIODeviceName &&
+                ioDeviceNameReferences.data?.map((ioDeviceName) => (
                   <option
-                    key={itDeviceName.idHardwareName}
-                    value={itDeviceName.idHardwareName}
+                    key={ioDeviceName.idHardwareName}
+                    value={ioDeviceName.idHardwareName}
                   >
-                    {itDeviceName.name}
+                    {ioDeviceName.name}
                   </option>
                 ))}
             </Form.Select>
-            {isErrorITDeviceName && (
+            {isErrorIODeviceName && (
               <Alert key="warning" variant="warning" className="mt-2 p-2">
                 Error al cargar los tipos de dispositivos:{" "}
-                {errorITDeviceName.message}
+                {errorIODeviceName.message}
               </Alert>
             )}
           </>
@@ -204,12 +206,12 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
               </option>
               {!isPendingHardwareBrand &&
                 !isErrorHardwareBrand &&
-                hardwareBrandReferences.data?.map((itDeviceBrand) => (
+                hardwareBrandReferences.data?.map((ioDeviceBrand) => (
                   <option
-                    key={itDeviceBrand.idHardwareBrand}
-                    value={itDeviceBrand.idHardwareBrand}
+                    key={ioDeviceBrand.idHardwareBrand}
+                    value={ioDeviceBrand.idHardwareBrand}
                   >
-                    {itDeviceBrand.brand}
+                    {ioDeviceBrand.brand}
                   </option>
                 ))}
             </Form.Select>
@@ -244,24 +246,24 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
               })}
             >
               <option disabled value="">
-                {isPendingITDeviceLine
+                {isPendingIODeviceLine
                   ? "Cargando líneas..."
                   : "Seleccione una línea"}
               </option>
-              {!isPendingITDeviceLine &&
-                !isErrorITDeviceLine &&
-                itDeviceLineReferences.data?.map((itDeviceLine) => (
+              {!isPendingIODeviceLine &&
+                !isErrorIODeviceLine &&
+                ioDeviceLineReferences.data?.map((ioDeviceLine) => (
                   <option
-                    key={itDeviceLine.idHardwareLine}
-                    value={itDeviceLine.idHardwareLine}
+                    key={ioDeviceLine.idHardwareLine}
+                    value={ioDeviceLine.idHardwareLine}
                   >
-                    {itDeviceLine.lineName}
+                    {ioDeviceLine.lineName}
                   </option>
                 ))}
             </Form.Select>
-            {isErrorITDeviceLine && (
+            {isErrorIODeviceLine && (
               <Alert key="warning" variant="warning" className="mt-2 p-2">
-                Error al cargar las líneas: {errorITDeviceLine.message}
+                Error al cargar las líneas: {errorIODeviceLine.message}
               </Alert>
             )}
           </>
@@ -496,45 +498,49 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
         rightError={errors.hardwareDetails?.warrantyEndDate?.message}
       />
 
-      {/* Room section */}
+      {/* IT Device Section  */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Ubicación (Habitación)</Form.Label>
+            <Form.Label>Dispositivo TI enlazado</Form.Label>
             <Form.Select
-              defaultValue={mode === "update" ? readData?.room?.id || "" : ""}
-              isInvalid={!!errors.room?.id}
-              {...register("room.id")}
+              defaultValue={
+                mode === "update" ? readData?.itDevice?.id || "" : ""
+              }
+              isInvalid={!!errors.itDevice?.id}
+              {...register("itDevice.id")}
             >
-              <option disabled={disableRoomPlaceholder} value="">
-                {isPendingRoom
-                  ? "Cargando ubicaciones..."
-                  : roomItDevice || hasInitialRoom
-                  ? "Quitar ubicación"
-                  : "Seleccione una ubicación (opcional)"}
+              <option disabled={disableItDevicePlaceholder} value="">
+                {isPendingIIDevice
+                  ? "Cargando dispositivo TI..."
+                  : itDevice || hasInitialItDevice
+                  ? "Quitar dispositivo TI"
+                  : "Seleccione un dispositivo TI (opcional)"}
               </option>
-              {!isPendingRoom &&
-                !isErrorRoom &&
-                roomReferences.data?.map((room) => (
-                  <option key={room.id} value={room.id}>
-                    {[RoomTypesEnum[room?.roomType], room.name, room.number]
-                      .filter(Boolean)
-                      .join(" - ")}
+              {!isPendingIIDevice &&
+                !isErrorIIDevice &&
+                itDeviceReferences.data?.map((itDevice) => (
+                  <option key={itDevice.id} value={itDevice.id}>
+                    {itDevice.hardwareDetails.hardwareName.name}{" "}
+                    {itDevice.hardwareDetails.hardwareBrand.brand}{" "}
+                    {itDevice.hardwareDetails.hardwareLine.lineName}{" "}
+                    {itDevice.hardwareDetails.hardwareSerie.serie} -{" "}
+                    {itDevice.hardwareDetails.serialNumber}
                   </option>
                 ))}
             </Form.Select>
-            {isErrorRoom && (
+            {isErrorIIDevice && (
               <Alert key="warning" variant="warning" className="mt-2 p-2">
-                Error al cargar las ubicaciones: {errorRoom.message}
+                Error al cargar los dispositivos TI: {errorIIDevice.message}
               </Alert>
             )}
           </>
         }
-        leftError={errors.room?.id?.message}
+        leftError={errors.itDevice?.id?.message}
       />
     </Form>
   );
 };
 
-export default ITDeviceForm;
+export default IODeviceForm;

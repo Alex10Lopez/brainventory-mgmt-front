@@ -34,36 +34,6 @@ function NavigationBar() {
               >
                 Recursos Humanos
               </Nav.Link>
-
-              <NavDropdown
-                title={<span className="text-primary">Configuración</span>}
-                id="setupDropdown"
-              >
-                <NavDropdown.Item as={NavLink} to="/action3">
-                  Action
-                </NavDropdown.Item>
-                <NavDropdown.Item as={NavLink} to="/action4">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item as={NavLink} to="/action5">
-                  Something else here
-                </NavDropdown.Item>
-              </NavDropdown>
-
-              <NavDropdown
-                title={<span className="text-primary">Cuenta</span>}
-                id="accountDropdown"
-              >
-                <NavDropdown.Item as={NavLink} to="/action3">
-                  Action
-                </NavDropdown.Item>
-
-                <NavDropdown.Divider />
-                <NavDropdown.Item as={NavLink} to="/action4">
-                  Cerrar sesión
-                </NavDropdown.Item>
-              </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>

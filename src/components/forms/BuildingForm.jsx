@@ -1,7 +1,7 @@
 import { Alert, Container, Form } from "react-bootstrap";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
-import FormSection from "../FormSection";
+import InventoryFormSection from "../InventoryFormSection";
 import countriesEs from "../../data/constants/countriesEs";
 import { useEffect } from "react";
 
@@ -12,9 +12,8 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
     register,
     handleSubmit,
     formState: { errors },
-    control,
     reset,
-    setValue,
+    getValues,
   } = useForm();
 
   useEffect(() => {
@@ -23,17 +22,10 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
     }
   }, [mode, readData, reset]);
 
-  const formValues = useWatch({
-    control,
-  });
-
-  const formValuesToSubmit = {
-    ...formValues,
-  };
-
   const handleFormSubmit = () => {
-    console.log(JSON.stringify(formValuesToSubmit, null, 2));
-    onSubmit(formValuesToSubmit);
+    const formData = getValues();
+    console.log(JSON.stringify(formData, null, 2));
+    onSubmit(formData);
   };
 
   return (
@@ -43,7 +35,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       onSubmit={handleSubmit(handleFormSubmit)}
     >
       {/* Photo Section  */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -61,7 +53,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Name and Number of Floors Section  */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -122,7 +114,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Description */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -148,7 +140,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address Street Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -210,7 +202,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address Postal Code and City Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -273,7 +265,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address State and Country Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
@@ -333,7 +325,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       />
 
       {/* Address Reference Section */}
-      <FormSection
+      <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>

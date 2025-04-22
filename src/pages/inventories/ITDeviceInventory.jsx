@@ -1,8 +1,6 @@
 import InventoryManagement from "../../components/InventoryManagement";
 import NavigationBar from "../../components/NavigationBar";
 import ITDevicesColumns from "../../components/columns/ITDevicesColumns";
-import ITDeviceCreateForm from "../../components/forms/createForm/ITDeviceCreateForm";
-import ITDeviceUpdateForm from "../../components/forms/updateForm/ITDeviceUpdateForm";
 import ITDeviceForm from "../../components/forms/ITDeviceForm";
 import ITDeviceView from "../../components/views/ITDeviceView";
 import {
@@ -34,7 +32,9 @@ function ITDeviceInventory() {
           <ITDeviceForm mode="create" onSubmit={onSubmit} />
         )}
         ViewModal={ITDeviceView}
-        UpdateModal={ITDeviceUpdateForm}
+        UpdateModal={({ readData, onSubmit }) => (
+          <ITDeviceForm mode="update" readData={readData} onSubmit={onSubmit} />
+        )}
       />
     </>
   );

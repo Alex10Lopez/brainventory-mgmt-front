@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AdminRegister from "./pages/AdminRegister";
+import GlobalAdminRegister from "./pages/GlobalAdminRegister";
 import EmployeeLogin from "./pages/EmployeeLogin";
 import Error404 from "./pages/Error404";
 import EmployeesInventory from "./pages/inventories/EmployeesInventory";
@@ -12,6 +12,7 @@ import HumanResourcesMenu from "./pages/HumanResourcesMenu";
 import InfrastructureMenu from "./pages/infrastructureMenu";
 import AssetsMenu from "./pages/AssetsMenu";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProfileForm from "./components/forms/ProfileForm";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,8 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<ProfileForm />} />
+
             <Route path="/assets-menu" element={<AssetsMenu />} />
 
             <Route
@@ -33,29 +36,22 @@ function App() {
               element={<HumanResourcesMenu />}
             />
 
-            <Route path="/admin-register" element={<AdminRegister />} />
-            <Route path="/employee-login" element={<EmployeeLogin />} />
+            <Route path="/register" element={<GlobalAdminRegister />} />
+            <Route path="/login" element={<EmployeeLogin />} />
 
             <Route
               path="/it-devices-inventory"
               element={<ITDeviceInventory />}
             />
             <Route
-              path="/peripherals-inventory"
+              path="/io-devices-inventory"
               element={<IODeviceInventory />}
-            />
-            <Route path="/software-inventory" element={<EmployeeLogin />} />
-            <Route
-              path="/software-license-inventory"
-              element={<EmployeeLogin />}
             />
             <Route
               path="/buildings-inventory"
               element={<BuildingsInventory />}
             />
             <Route path="/rooms-inventory" element={<RoomsInventory />} />
-            <Route path="/departments-inventory" element={<EmployeeLogin />} />
-            <Route path="/job-roles-inventory" element={<EmployeeLogin />} />
             <Route
               path="/employees-inventory"
               element={<EmployeesInventory />}
