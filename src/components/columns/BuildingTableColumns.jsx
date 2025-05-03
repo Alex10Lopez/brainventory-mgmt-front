@@ -31,15 +31,35 @@ const BuildingTableColumns = () => {
       },
     },
     {
+      id: "id",
       header: "ID",
-      accessorFn: (row) => String(row.id),
+      accessorKey: "id",
+      sortingFn: (rowA, rowB) => {
+        const idA = rowA.original.id;
+        const idB = rowB.original.id;
+        return idA - idB;
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const idString = String(row.original.id);
+        return idString.includes(filterValue);
+      },
+      cell: ({ getValue }) => String(getValue()),
     },
     {
+      id: "name",
       header: "Nombre del edificio",
       accessorKey: "name",
     },
-    { header: "Numero de pisos", accessorKey: "numberOfFloors" },
-    { header: "Descripción", accessorKey: "description" },
+    {
+      id: "numberOfFloors",
+      header: "Numero de pisos",
+      accessorKey: "numberOfFloors",
+    },
+    {
+      id: "description",
+      header: "Descripción",
+      accessorKey: "description",
+    },
   ];
 };
 

@@ -36,15 +36,33 @@ const EmployeeTableColumns = () => {
       },
     },
     {
+      id: "id",
       header: "ID",
-      accessorFn: (row) => String(row.id),
+      accessorKey: "id",
+      sortingFn: (rowA, rowB) => {
+        const idA = rowA.original.id;
+        const idB = rowB.original.id;
+        return idA - idB;
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const idString = String(row.original.id);
+        return idString.includes(filterValue);
+      },
+      cell: ({ getValue }) => String(getValue()),
     },
     {
+      id: "fullname",
       header: "Nombre completo",
       accessorFn: (row) => `${row.name} ${row.lastname}`,
     },
-    { header: "Fecha de nacimiento", accessorKey: "dateOfBirth" },
     {
+      id: "dateOfBirth",
+      header: "Fecha de nacimiento",
+      accessorKey: "dateOfBirth",
+      sortingFn: "datetime",
+    },
+    {
+      id: "sex",
       header: "Sexo",
       accessorKey: "sex",
       cell: ({ row }) => {
@@ -52,8 +70,13 @@ const EmployeeTableColumns = () => {
         return SexEnum[sex];
       },
     },
-    { header: "Nacionalidad", accessorKey: "nationality" },
     {
+      id: "nationality",
+      header: "Nacionalidad",
+      accessorKey: "nationality",
+    },
+    {
+      id: "permissions",
       header: "Privilegios",
       accessorKey: "permissions",
       cell: ({ row }) => {
@@ -63,6 +86,7 @@ const EmployeeTableColumns = () => {
       },
     },
     {
+      id: "jobRoles",
       header: "Puestos de trabajo",
       accessorKey: "jobRoles",
       cell: ({ row }) => {
@@ -80,7 +104,8 @@ const EmployeeTableColumns = () => {
       },
     },
     {
-      header: "Estado",
+      id: "status",
+      header: "Status",
       accessorKey: "status",
       cell: ({ row }) => {
         const status = row.getValue("status");
@@ -89,25 +114,28 @@ const EmployeeTableColumns = () => {
       },
     },
     {
+      id: "salary",
       header: "Salario (USD)",
       accessorKey: "salary",
-      accessorFn: (row) => {
-        const salary = parseFloat(row.salary);
-        return salary.toLocaleString("en-US", {
+      cell: ({ getValue }) => {
+        return new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "USD",
-        });
+        }).format(getValue());
       },
     },
     {
+      id: "phoneNumber",
       header: "Teléfono",
       accessorFn: (row) => row.contacts?.[0]?.phoneNumber,
     },
     {
+      id: "email",
       header: "Correo electrónico",
       accessorFn: (row) => row.contacts?.[0]?.email,
     },
     {
+      id: "loginDate",
       header: "Inicio de sesión",
       accessorKey: "loginDate",
       cell: ({ row }) => {

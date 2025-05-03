@@ -31,23 +31,38 @@ const IODevicesColumns = () => {
       },
     },
     {
+      id: "id",
       header: "ID",
-      accessorFn: (row) => String(row.id),
+      accessorKey: "id",
+      sortingFn: (rowA, rowB) => {
+        const idA = rowA.original.id;
+        const idB = rowB.original.id;
+        return idA - idB;
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const idString = String(row.original.id);
+        return idString.includes(filterValue);
+      },
+      cell: ({ getValue }) => String(getValue()),
     },
     {
+      id: "name",
       header: "Dispositivo",
       accessorFn: (row) => row.hardwareDetails?.hardwareName.name,
     },
     {
+      id: "brand",
       header: "Marca",
       accessorFn: (row) => row.hardwareDetails?.hardwareBrand.brand,
     },
     {
+      id: "serie",
       header: "Modelo",
       accessorFn: (row) =>
         `${row.hardwareDetails?.hardwareLine.lineName} ${row.hardwareDetails?.hardwareSerie.serie}`,
     },
     {
+      id: "serialNumber",
       header: "Número de serie",
       accessorFn: (row) => row.hardwareDetails?.serialNumber,
     },

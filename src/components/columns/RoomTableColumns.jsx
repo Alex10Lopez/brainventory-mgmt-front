@@ -32,15 +32,27 @@ const RoomTableColumns = () => {
       },
     },
     {
+      id: "id",
       header: "ID",
-      accessorFn: (row) => String(row.id),
+      accessorKey: "id",
+      sortingFn: (rowA, rowB) => {
+        const idA = rowA.original.id;
+        const idB = rowB.original.id;
+        return idA - idB;
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const idString = String(row.original.id);
+        return idString.includes(filterValue);
+      },
+      cell: ({ getValue }) => String(getValue()),
     },
     {
+      id: "name",
       header: "Nombre de la sala/espacio",
       accessorFn: (row) => {
-        const roomType = row.original.roomType;
-        const roomName = row.original.name;
-        const roomNumber = row.original.number;
+        const roomType = row.roomType;
+        const roomName = row.name;
+        const roomNumber = row.number;
         const roomTypeLabel = RoomTypesEnum[roomType] || roomType;
 
         let result = roomTypeLabel;
@@ -63,15 +75,22 @@ const RoomTableColumns = () => {
       },
     },
     {
+      id: "capacityMax",
       header: "Capacidad maxima",
       accessorFn: (row) => `${row.capacityMax ? row.capacityMax : "-"}`,
     },
     {
+      id: "building",
       header: "Edificio",
       accessorKey: "building.name",
     },
-    { header: "Nivel de piso", accessorKey: "floorLabel" },
     {
+      id: "floorLabel",
+      header: "Nivel de piso",
+      accessorKey: "floorLabel",
+    },
+    {
+      id: "departments",
       header: "Departamentos",
       accessorKey: "departments",
       cell: ({ row }) => {

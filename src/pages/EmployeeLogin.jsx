@@ -38,28 +38,21 @@ const EmployeeLogin = () => {
       }
       contentBody={
         <>
-          <LoginForm onSubmit={handleCreate} />
           {isErrorMutation && (
             <div className="d-flex justify-content-center align-items-center">
-              <Alert variant="danger" className="text-center" dismissible>
-                Error:{" "}
-                {error?.message || "Ocurrió un error al guardar registro."}
-                {/*<br />*/}
-                {/*error?.response && (
-                <>
-                  Respuesta del servidor: {JSON.stringify(error.response.data)}
-                </>
-              )*/}
+              <Alert variant="danger" className="text-center">
+                No se puedo iniciar sesión, compruebe su usuario y contraseña
               </Alert>
             </div>
           )}
+          <LoginForm onSubmit={handleCreate} />
         </>
       }
       contentFooter={
         <Button
           variant="primary"
           type="submit"
-          form="global-admin-form"
+          form="login-form"
           className="w-100"
           disabled={isPendingMutation}
         >

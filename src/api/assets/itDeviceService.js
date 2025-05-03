@@ -3,25 +3,55 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/api/it-device";
 
 export async function saveITDevice(itDevice) {
-  return await axios.post(API_URL, itDevice);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.post(API_URL, itDevice, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAll() {
-  return await axios.get(API_URL);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findById(id) {
-  return await axios.get(`${API_URL}/${id}`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function updateITDevice(itDevice, id) {
-  return await axios.put(`${API_URL}/${id}`, itDevice);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.put(`${API_URL}/${id}`, itDevice, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function deleteITDevice(id) {
-  return await axios.delete(`${API_URL}/${id}`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAllITDevices() {
-  return await axios.get(`${API_URL}/references`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/references`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

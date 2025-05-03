@@ -44,8 +44,11 @@ function TableFilterDropdown() {
           <span className="text-dark">Filtrar por: </span>
           <span className="text-primary">
             {selectedFilter
-              ? tableColumns.find((col) => col.accessorKey === selectedFilter)
-                  ?.header
+              ? tableColumns.find(
+                  (col) =>
+                    col.accessorKey === selectedFilter ||
+                    col.id === selectedFilter
+                )?.header
               : "Selecciona una opción"}
           </span>
         </>

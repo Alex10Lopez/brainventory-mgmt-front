@@ -33,7 +33,9 @@ function TableSortDropdown() {
       : "";
 
   const sortColumnHeader =
-    tableColumns.find((col) => col.accessorKey === sortColumn)?.header || "";
+    tableColumns.find(
+      (col) => col.accessorKey === sortColumn || col.id === sortColumn
+    )?.header || "";
 
   return (
     <NavDropdown

@@ -4,10 +4,12 @@ import GlobalAdminForm from "../components/forms/GlobalAdminForm";
 import useWindowWidth from "../components/hooks/useWindowWidth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ContentFormSection from "../components/ContentFormSection";
+import { useNavigate } from "react-router-dom";
 
 const GlobalAdminRegister = () => {
   const windowWidth = useWindowWidth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const {
     isPending: isPendingMutation,
@@ -19,6 +21,7 @@ const GlobalAdminRegister = () => {
     mutationFn: register,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["globalAdminRegister"]);
+      navigate("/");
     },
   });
 
@@ -64,10 +67,10 @@ const GlobalAdminRegister = () => {
           {isPendingMutation ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />
-              Registrando...
+              Actualizando...
             </>
           ) : (
-            "Registrar"
+            "Actualizar"
           )}
         </Button>
       }

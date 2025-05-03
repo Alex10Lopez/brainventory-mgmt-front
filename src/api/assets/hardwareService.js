@@ -3,25 +3,55 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/api/hardware";
 
 export async function findAllITDeviceNames() {
-  return await axios.get(`${API_URL}/it-devices`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/it-devices`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAllIODeviceNames() {
-  return await axios.get(`${API_URL}/io-devices`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/io-devices`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAllHardwareBrands() {
-  return await axios.get(`${API_URL}/brands`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/brands`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAllITDeviceLines() {
-  return await axios.get(`${API_URL}/it-lines`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/it-lines`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAllIODeviceLines() {
-  return await axios.get(`${API_URL}/io-lines`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/io-lines`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function findAllHardwareSeries() {
-  return await axios.get(`${API_URL}/series`);
+  const token = localStorage.getItem("jwtToken");
+  return await axios.get(`${API_URL}/series`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }

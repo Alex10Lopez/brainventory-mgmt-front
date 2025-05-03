@@ -46,7 +46,7 @@ const LoginForm = ({ onSubmit }) => {
 
   return (
     <Form
-      id="global-admin-form"
+      id="login-form"
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
