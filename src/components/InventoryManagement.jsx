@@ -33,6 +33,7 @@ function InventoryManagement({
   } = useQuery({
     queryKey: ["inventoryData"],
     queryFn: findAll,
+    retry: false,
   });
 
   const [sorting, setSorting] = useState([]);

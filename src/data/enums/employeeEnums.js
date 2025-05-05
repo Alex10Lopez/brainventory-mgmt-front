@@ -4,7 +4,6 @@ export const SexEnum = {
 };
 
 export const PermissionsEnum = {
-  GLOBAL_ADMIN: "Administrador global",
   ASSETS_ADMIN: "Administrador de activos",
   INFRASTRUCTURE_ADMIN: "Administrador de infraestructura",
   HR_ADMIN: "Administrador de recursos humanos",

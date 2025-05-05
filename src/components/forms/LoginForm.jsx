@@ -1,12 +1,6 @@
-import { Form, Alert } from "react-bootstrap";
+import { Form, Alert, Container } from "react-bootstrap";
 import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
-import demonymEs from "../../data/constants/demonymEs";
-import { SexEnum } from "../../data/enums/employeeEnums";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import InventoryFormSection from "../InventoryFormSection";
-import { findAllJobRole } from "../../api/humanResources/jobRoleService";
 
 const LoginForm = ({ onSubmit }) => {
   const windowWidth = useWindowWidth();
@@ -25,7 +19,6 @@ const LoginForm = ({ onSubmit }) => {
     control,
   });
 
-  const password = useWatch({ control, name: "password", defaultValue: "" });
   const showPassword = useWatch({
     control,
     name: "showPassword",
@@ -50,78 +43,66 @@ const LoginForm = ({ onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      <InventoryFormSection
-        windowWidth={windowWidth}
-        leftContent={
-          <>
-            <Form.Label>Correo empresarial</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Se generará automáticamente"
-              {...register("email", {
-                required: "El correo empresarial es requerido",
-                minLength: {
-                  value: 5,
-                  message: "Mínimo 5 caracteres",
-                },
-                maxLength: {
-                  value: 255,
-                  message: "Máximo 255 caracteres",
-                },
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Formato de correo inválido",
-                },
-                validate: (value) =>
-                  !value ||
-                  value.length >= 5 ||
-                  "Si ingresa un correo, debe tener al menos 5 caracteres",
-              })}
-            />
-          </>
-        }
-        leftError={errors.contacts?.[0]?.email?.message}
-        rightContent={
-          <>
-            <Form.Label>Contraseña</Form.Label>
-            <Form.Control
-              type={showPassword ? "text" : "password"}
-              placeholder="Mínimo 8 caracteres"
-              isInvalid={!!errors.password}
-              {...register("password", {
-                required: "La contraseña es requerida",
-              })}
-            />
-          </>
-        }
-        rightError={errors.password?.message}
-      />
+      <Container fluid className="px-0 mb-3">
+        <Form.Group className="w-100">
+          <Form.Label>Correo empresarial</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Se generará automáticamente"
+            {...register("email", {
+              required: "El correo empresarial es requerido",
+              minLength: {
+                value: 5,
+                message: "Mínimo 5 caracteres",
+              },
+              maxLength: {
+                value: 255,
+                message: "Máximo 255 caracteres",
+              },
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Formato de correo inválido",
+              },
+              validate: (value) =>
+                !value ||
+                value.length >= 5 ||
+                "Si ingresa un correo, debe tener al menos 5 caracteres",
+            })}
+            isInvalid={!!errors.email}
+          />
+          {errors.email && (
+            <Form.Control.Feedback type="invalid" className="d-block">
+              {errors.email.message}
+            </Form.Control.Feedback>
+          )}
+        </Form.Group>
+      </Container>
 
-      <InventoryFormSection
-        windowWidth={windowWidth}
-        leftContent={
-          <>
-            <Form.Label>Confirmar contraseña</Form.Label>
-            <Form.Control
-              type={showPassword ? "text" : "password"}
-              placeholder="Repita la contraseña"
-              isInvalid={!!errors.verifyPassword}
-              {...register("verifyPassword", {
-                required: "La confirmación es requerida",
-                validate: (value) =>
-                  value === password || "Las contraseñas no coinciden",
-              })}
-            />
-          </>
-        }
-        leftError={errors.verifyPassword?.message}
-        rightContent={
-          <>
-            <Form.Label>Mostrar contraseña</Form.Label>
-            <Form.Check type="checkbox" {...register("showPassword")} />
-          </>
-        }
-      />
+      <Container fluid className="px-0 mb-3">
+        <Form.Group className="w-100">
+          <Form.Label>Contraseña</Form.Label>
+          <Form.Control
+            type={showPassword ? "text" : "password"}
+            placeholder="Mínimo 8 caracteres"
+            isInvalid={!!errors.password}
+            {...register("password", {
+              required: "La contraseña es requerida",
+            })}
+          />
+          {errors.password && (
+            <Form.Control.Feedback type="invalid" className="d-block">
+              {errors.password.message}
+            </Form.Control.Feedback>
+          )}
+        </Form.Group>
+      </Container>
+
+      <Container fluid className="px-0 mb-3">
+        <Form.Group className="w-100">
+          <Form.Label>Mostrar contraseña</Form.Label>
+          <Form.Check type="checkbox" {...register("showPassword")} />
+        </Form.Group>
+      </Container>
     </Form>
   );
 };

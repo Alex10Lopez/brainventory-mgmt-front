@@ -1,4 +1,4 @@
-function getSubFromJwt() {
+function getFieldFromJwt(fieldName) {
   const jwt = localStorage.getItem("jwtToken");
   if (!jwt) return null;
 
@@ -6,7 +6,7 @@ function getSubFromJwt() {
   const payloadJson = atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"));
   const payload = JSON.parse(payloadJson);
 
-  return payload.sub;
+  return payload[fieldName];
 }
 
-export default getSubFromJwt;
+export default getFieldFromJwt;

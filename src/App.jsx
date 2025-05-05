@@ -13,6 +13,7 @@ import InfrastructureMenu from "./pages/infrastructureMenu";
 import AssetsMenu from "./pages/AssetsMenu";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmployeeProfile from "./pages/EmployeeProfile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -24,16 +25,31 @@ function App() {
           <Routes>
             <Route path="/" element={<EmployeeProfile />} />
 
-            <Route path="/assets-menu" element={<AssetsMenu />} />
+            <Route
+              path="/assets-menu"
+              element={
+                <ProtectedRoute path="/assets-menu">
+                  <AssetsMenu />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/infrastructure-menu"
-              element={<InfrastructureMenu />}
+              element={
+                <ProtectedRoute path="/infrastructure-menu">
+                  <InfrastructureMenu />
+                </ProtectedRoute>
+              }
             />
 
             <Route
               path="/human-resources-menu"
-              element={<HumanResourcesMenu />}
+              element={
+                <ProtectedRoute path="/human-resources-menu">
+                  <HumanResourcesMenu />
+                </ProtectedRoute>
+              }
             />
 
             <Route path="/register" element={<GlobalAdminRegister />} />
@@ -41,20 +57,43 @@ function App() {
 
             <Route
               path="/it-devices-inventory"
-              element={<ITDeviceInventory />}
+              element={
+                <ProtectedRoute path="/it-devices-inventory">
+                  <ITDeviceInventory />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/io-devices-inventory"
-              element={<IODeviceInventory />}
+              element={
+                <ProtectedRoute path="/io-devices-inventory">
+                  <IODeviceInventory />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/buildings-inventory"
-              element={<BuildingsInventory />}
+              element={
+                <ProtectedRoute path="/buildings-inventory">
+                  <BuildingsInventory />
+                </ProtectedRoute>
+              }
             />
-            <Route path="/rooms-inventory" element={<RoomsInventory />} />
+            <Route
+              path="/rooms-inventory"
+              element={
+                <ProtectedRoute path="/rooms-inventory">
+                  <RoomsInventory />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/employees-inventory"
-              element={<EmployeesInventory />}
+              element={
+                <ProtectedRoute path="/employees-inventory">
+                  <EmployeesInventory />
+                </ProtectedRoute>
+              }
             />
             <Route path="*" element={<Error404 />} />
           </Routes>

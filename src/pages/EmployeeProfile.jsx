@@ -3,16 +3,23 @@ import ProfileForm from "../components/forms/ProfileForm";
 import { useQuery } from "@tanstack/react-query";
 import ContentFormSection from "../components/ContentFormSection";
 import { Alert, Spinner } from "react-bootstrap";
-import getSubFromJwt from "../components/helpers/getSubFromJwt";
+import getFieldFromJwt from "../components/helpers/getFieldFromJwt";
 import { findByEmail } from "../api/authAdmin/profileService";
 import NavigationBar from "../components/NavigationBar";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const EmployeeProfile = () => {
   const windowWidth = useWindowWidth();
   const navigate = useNavigate();
 
-  const email = getSubFromJwt();
+  const email = getFieldFromJwt("sub");
+
+  useEffect(() => {
+    if (!email) {
+      navigate("/login");
+    }
+  }, [email, navigate]);
 
   const {
     isPending,

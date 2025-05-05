@@ -5,6 +5,7 @@ import useWindowWidth from "../components/hooks/useWindowWidth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ContentFormSection from "../components/ContentFormSection";
 import { useNavigate } from "react-router-dom";
+import getFieldFromJwt from "../components/helpers/getFieldFromJwt";
 
 const EmployeeLogin = () => {
   const windowWidth = useWindowWidth();
@@ -20,14 +21,32 @@ const EmployeeLogin = () => {
   } = useMutation({
     mutationFn: login,
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries(["employeeLogin"]);
-      navigate("/");
+      const permissions = getFieldFromJwt("permissions");
+      const allowedPermissions = [
+        "GLOBAL_ADMIN",
+        "HR_ADMIN",
+        "ASSETS_ADMIN",
+        "INFRASTRUCTURE_ADMIN",
+      ];
+
+      const hasPermission = allowedPermissions.some(
+        (perm) => permissions && permissions.includes(perm)
+      );
+
+      if (hasPermission) {
+        await queryClient.invalidateQueries(["employeeLogin"]);
+        navigate("/");
+      } else {
+        localStorage.removeItem("jwtToken");
+        throw new Error("No tiene permisos para acceder al sistema");
+      }
     },
   });
 
   const handleCreate = (data) => {
     mutate(data);
   };
+
   return (
     <ContentFormSection
       windowWidth={windowWidth}
@@ -41,7 +60,9 @@ const EmployeeLogin = () => {
           {isErrorMutation && (
             <div className="d-flex justify-content-center align-items-center">
               <Alert variant="danger" className="text-center">
-                No se puedo iniciar sesión, compruebe su usuario y contraseña
+                {error?.message === "No tiene permisos para acceder al sistema"
+                  ? "No tiene permisos para acceder al sistema"
+                  : "No se puedo iniciar sesión, compruebe su usuario y contraseña"}
               </Alert>
             </div>
           )}
