@@ -12,12 +12,29 @@ export async function login(employee) {
   }
 }
 
-export async function register(employee) {
+export async function register({ admin, image }) {
   try {
-    const response = await axios.post(`${API_URL}/register`, employee);
+    const formData = new FormData();
+
+    formData.append(
+      "admin",
+      new Blob([JSON.stringify(admin)], { type: "application/json" })
+    );
+
+    if (image) {
+      formData.append("image", image);
+    }
+
+    const response = await axios.post(`${API_URL}/register`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     if (response.data.token) {
       localStorage.setItem("jwtToken", response.data.token);
     }
+
     return response;
   } catch (error) {
     throw error;

@@ -44,13 +44,16 @@ const GlobalAdminRegister = () => {
             <div className="d-flex justify-content-center align-items-center">
               <Alert variant="danger" className="text-center" dismissible>
                 Error:{" "}
-                {error?.message || "Ocurrió un error al guardar registro."}
-                {/*<br />*/}
-                {/*error?.response && (
-                <>
-                  Respuesta del servidor: {JSON.stringify(error.response.data)}
-                </>
-              )*/}
+                {error?.message
+                  ? "No se permite el registro. Ya existe un Administrador global."
+                  : "Ocurrió un error al guardar registro."}
+                <br />
+                {error?.response && (
+                  <>
+                    Respuesta del servidor:{" "}
+                    {JSON.stringify(error.response.data)}
+                  </>
+                )}
               </Alert>
             </div>
           )}
@@ -67,10 +70,10 @@ const GlobalAdminRegister = () => {
           {isPendingMutation ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />
-              Actualizando...
+              Registrando...
             </>
           ) : (
-            "Actualizar"
+            "Registrar"
           )}
         </Button>
       }

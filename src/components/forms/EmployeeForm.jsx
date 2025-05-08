@@ -6,15 +6,20 @@ import demonymEs from "../../data/constants/demonymEs";
 import {
   SexEnum,
   PermissionsEnum,
+  PermissionsWithoutAdminEnum,
   StatusEnum,
 } from "../../data/enums/employeeEnums";
 import { findAllJobRole } from "../../api/humanResources/jobRoleService";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import InventoryFormSection from "../InventoryFormSection";
+import getFieldFromJwt from "../helpers/getFieldFromJwt";
 
 const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
+  const imageInputRef = useRef(null);
+
+  const permissions = getFieldFromJwt("permissions");
 
   const {
     register,
@@ -26,18 +31,29 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
     getValues,
   } = useForm();
 
-  // Reset form with initial data when in update mode
   useEffect(() => {
     if (mode === "update" && readData) {
-      reset(readData);
+      if (readData.image) {
+        fetch(readData.image)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const file = new File([blob], "profile.jpg", { type: blob.type });
+            setValue("imageFile", file);
+          });
+      }
+
+      const { password, ...dataWithoutPassword } = readData;
+      reset(dataWithoutPassword);
+
+      setValue("password", "");
+      setValue("verifyPassword", "");
     }
-  }, [mode, readData, reset]);
+  }, [mode, readData, reset, setValue]);
 
   const formValues = useWatch({
     control,
   });
 
-  // Fetch job roles
   const {
     isPending: isPendingJobRole,
     isError: isErrorJobRole,
@@ -99,9 +115,13 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
 
   const handleFormSubmit = () => {
     const formData = getValues();
+    const imageFile = formData.imageFile;
 
-    const formValuesToSubmit = {
+    const employeeData = {
       ...formData,
+      verifyPassword: undefined,
+      imageFile: undefined,
+      showPassword: undefined,
       ...(mode === "update" && {
         password: formData.password ? formData.password : undefined,
         verifyPassword: undefined,
@@ -116,11 +136,15 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
           (index === 0 ? contact.phoneNumber : true) &&
           (!contact || contact.phoneNumber || contact.email)
       ),
-      showPassword: undefined,
     };
 
-    console.log(JSON.stringify(formValuesToSubmit, null, 2));
-    onSubmit(formValuesToSubmit);
+    console.log(JSON.stringify(employeeData, null, 2));
+    console.log(imageFile);
+
+    onSubmit({
+      employee: employeeData,
+      image: imageFile,
+    });
   };
 
   return (
@@ -136,15 +160,46 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
           <>
             <Form.Label>Foto del empleado</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="URL de la imagen (ejemplo: https://ejemplo.com/foto.jpg)"
-              defaultValue={mode === "update" ? readData?.image || "" : ""}
-              isInvalid={!!errors.image}
-              {...register("image")}
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => {
+                setValue("imageFile", e.target.files[0] || null);
+              }}
             />
+            {formValues.imageFile && (
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm mt-2"
+                onClick={() => {
+                  setValue("imageFile", null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
+              >
+                Quitar imagen
+              </button>
+            )}
           </>
         }
-        leftError={errors.image?.message}
+        rightContent={
+          <>
+            {formValues.imageFile && (
+              <div className="d-flex flex-column align-items-center mt-2">
+                <img
+                  src={URL.createObjectURL(formValues.imageFile)}
+                  alt="Vista previa de la foto"
+                  style={{
+                    maxWidth: "150px",
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                  }}
+                />
+              </div>
+            )}
+          </>
+        }
       />
 
       {/* Name Section */}
@@ -213,7 +268,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.lastname?.message}
       />
-
       {/* Birth Date and Sex Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -294,7 +348,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.sex?.message}
       />
-
       {/* Nationality and Permissions Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -340,7 +393,11 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
               <option disabled value="">
                 Seleccione el tipo de permisos
               </option>
-              {Object.entries(PermissionsEnum).map(([key, value]) => (
+              {Object.entries(
+                permissions === "GLOBAL_ADMIN"
+                  ? PermissionsEnum
+                  : PermissionsWithoutAdminEnum
+              ).map(([key, value]) => (
                 <option key={key} value={key}>
                   {value}
                 </option>
@@ -350,7 +407,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.permissions?.message}
       />
-
       {/* Status and Salary Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -408,7 +464,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.salary?.message}
       />
-
       {/* Job Roles Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -486,7 +541,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.jobRoles?.[1]?.id?.message}
       />
-
       {/* Primary Contact Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -536,7 +590,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
           </>
         }
       />
-
       {/* Secondary Contact Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -612,7 +665,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.contacts?.[1]?.email?.message}
       />
-
       {/* Address Street Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -676,7 +728,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.addresses?.[0]?.streetNumber?.message}
       />
-
       {/* Address Postal Code and City Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -741,7 +792,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.addresses?.[0]?.city?.message}
       />
-
       {/* Address State and Country Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -803,7 +853,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.addresses?.[0]?.country?.message}
       />
-
       {/* Address Reference Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -836,7 +885,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         leftError={errors.addresses?.[0]?.reference?.message}
       />
-
       {/* Password Section */}
       {mode === "create" ? (
         <>
@@ -897,7 +945,8 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
                 <Form.Label>Nueva contraseña</Form.Label>
                 <Form.Control
                   type={showPassword ? "text" : "password"}
-                  placeholder="Opcional - mínimo 8 caracteres"
+                  placeholder="Dejar en blanco para mantener la actual"
+                  defaultValue=""
                   isInvalid={!!errors.password}
                   {...register("password", {
                     minLength: {

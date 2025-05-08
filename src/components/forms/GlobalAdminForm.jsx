@@ -3,13 +3,14 @@ import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
 import demonymEs from "../../data/constants/demonymEs";
 import { SexEnum } from "../../data/enums/employeeEnums";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import InventoryFormSection from "../InventoryFormSection";
 import { findAllJobRole } from "../../api/humanResources/jobRoleService";
 
 const GlobalAdminForm = ({ onSubmit }) => {
   const windowWidth = useWindowWidth();
+  const imageInputRef = useRef(null);
 
   const {
     register,
@@ -81,18 +82,17 @@ const GlobalAdminForm = ({ onSubmit }) => {
 
   const handleFormSubmit = () => {
     const formData = getValues();
+    const imageFile = formData.imageFile;
 
-    const formValuesToSubmit = {
+    const adminData = {
       ...formData,
-      permissions: "GLOBAL_ADMIN",
-      status: "ACTIVE",
-      password: formData.password ? formData.password : undefined,
+      password: formData.password || undefined,
       verifyPassword: undefined,
       showPassword: undefined,
+      imageFile: undefined,
     };
 
-    console.log(JSON.stringify(formValuesToSubmit, null, 2));
-    onSubmit(formValuesToSubmit);
+    onSubmit({ admin: adminData, image: imageFile });
   };
 
   return (
@@ -101,6 +101,55 @@ const GlobalAdminForm = ({ onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
+      {/* Photo Section  */}
+      <InventoryFormSection
+        windowWidth={windowWidth}
+        leftContent={
+          <>
+            <Form.Label>Foto del empleado</Form.Label>
+            <Form.Control
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => {
+                setValue("imageFile", e.target.files[0] || null);
+              }}
+            />
+            {formValues.imageFile && (
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm mt-2"
+                onClick={() => {
+                  setValue("imageFile", null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
+              >
+                Quitar imagen
+              </button>
+            )}
+          </>
+        }
+        rightContent={
+          <>
+            {formValues.imageFile && (
+              <div className="d-flex flex-column align-items-center mt-2">
+                <img
+                  src={URL.createObjectURL(formValues.imageFile)}
+                  alt="Vista previa de la foto"
+                  style={{
+                    maxWidth: "150px",
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                  }}
+                />
+              </div>
+            )}
+          </>
+        }
+      />
+
       {/* Name Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -274,12 +323,7 @@ const GlobalAdminForm = ({ onSubmit }) => {
         rightContent={
           <>
             <Form.Label>Permisos del sistema</Form.Label>
-            <Form.Control
-              defaultValue="Administrador Global"
-              disabled
-              isInvalid={!!errors.permissions}
-              {...register("permissions")}
-            />
+            <Form.Control defaultValue="Administrador Global" disabled />
           </>
         }
         rightError={errors.permissions?.message}
@@ -291,12 +335,7 @@ const GlobalAdminForm = ({ onSubmit }) => {
         leftContent={
           <>
             <Form.Label>Status</Form.Label>
-            <Form.Control
-              defaultValue="Activo"
-              disabled
-              isInvalid={!!errors.status}
-              {...register("status")}
-            />
+            <Form.Control defaultValue="Activo" disabled />
           </>
         }
         leftError={errors.status?.message}

@@ -65,12 +65,12 @@ function InventoryModalCreate() {
           <div className="d-flex justify-content-center align-items-center">
             <Alert variant="danger" className="text-center" dismissible>
               Error: {error?.message || "Ocurrió un error al guardar registro."}
-              {/*<br />*/}
-              {/*error?.response && (
+              <br />
+              {error?.response && (
                 <>
                   Respuesta del servidor: {JSON.stringify(error.response.data)}
                 </>
-              )*/}
+              )}
             </Alert>
           </div>
         )}

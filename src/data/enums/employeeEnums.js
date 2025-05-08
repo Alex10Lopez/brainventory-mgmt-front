@@ -3,7 +3,15 @@ export const SexEnum = {
   FEMALE: "Femenino",
 };
 
+export const PermissionsWithoutAdminEnum = {
+  ASSETS_ADMIN: "Administrador de activos",
+  INFRASTRUCTURE_ADMIN: "Administrador de infraestructura",
+  HR_ADMIN: "Administrador de recursos humanos",
+  NO_ADMIN: "Sin privilegios",
+};
+
 export const PermissionsEnum = {
+  GLOBAL_ADMIN: "Administrador global",
   ASSETS_ADMIN: "Administrador de activos",
   INFRASTRUCTURE_ADMIN: "Administrador de infraestructura",
   HR_ADMIN: "Administrador de recursos humanos",

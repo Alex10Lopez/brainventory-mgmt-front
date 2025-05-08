@@ -10,9 +10,11 @@ import {
   updateEmployee,
   deleteEmployee,
 } from "../../api/humanResources/employeeService";
+import getFieldFromJwt from "../../components/helpers/getFieldFromJwt";
 
 function EmployeesInventory() {
   const tableColumns = EmployeeTableColumns();
+  const email = getFieldFromJwt("sub");
 
   return (
     <>
@@ -21,7 +23,7 @@ function EmployeesInventory() {
       <InventoryManagement
         titleInventory="Empleado"
         createRecord={saveEmployee}
-        findAll={findAll}
+        findAll={() => findAll(email)}
         findById={findById}
         updateById={updateEmployee}
         deleteById={deleteEmployee}
