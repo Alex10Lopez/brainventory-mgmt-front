@@ -8,6 +8,8 @@ const BuildingView = ({ readData }) => {
 
   const buildingData = readData;
 
+  const URL_IMAGE = "http://localhost:9000";
+
   return (
     <>
       <InventoryViewSection
@@ -15,11 +17,31 @@ const BuildingView = ({ readData }) => {
         leftContent={
           <>
             <strong>Foto del edificio</strong>
-            <p>
-              {buildingData.image || (
-                <span className="text-secondary">No disponible</span>
+            <div className="mt-2">
+              <img
+                src={
+                  buildingData.image
+                    ? `${URL_IMAGE}${buildingData.image}`
+                    : `${URL_IMAGE}/images/infrastructure/building.png`
+                }
+                alt={
+                  buildingData.image
+                    ? "Foto del dispositivo"
+                    : "Imagen predeterminada del edificio"
+                }
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  borderRadius: "4px",
+                  opacity: buildingData.image ? 1 : 0.6,
+                }}
+              />
+              {!buildingData.image && (
+                <div className="text-secondary mt-1">
+                  Imagen predeterminada por falta de fotografía real.
+                </div>
               )}
-            </p>
+            </div>
           </>
         }
       />

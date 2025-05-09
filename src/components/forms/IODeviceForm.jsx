@@ -12,12 +12,14 @@ import {
   PhysicalStatusEnum,
   OperationalStatusEnum,
 } from "../../data/enums/hardwareEnums";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import InventoryFormSection from "../InventoryFormSection";
 
 const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
+  const imageInputRef = useRef(null);
+  const [localImageFile, setLocalImageFile] = useState(null);
 
   const {
     register,
@@ -25,6 +27,7 @@ const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
     formState: { errors },
     reset,
     getValues,
+    setValue,
     control,
   } = useForm();
 
@@ -39,7 +42,7 @@ const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
     if (mode === "update" && readData) {
       reset(readData);
     }
-  }, [mode, readData, reset]);
+  }, [mode, readData, reset, setValue]);
 
   const {
     isPending: isPendingIODeviceName,
@@ -95,22 +98,25 @@ const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
     control,
     name: "itDevice.id",
   });
+
   const hasInitialItDevice = mode === "update" && readData?.itDevice?.id;
   const disableItDevicePlaceholder = !itDevice && !hasInitialItDevice;
 
   const handleFormSubmit = () => {
     const formData = getValues();
+    const imageFile = formData.imageFile;
 
-    const formValuesToSubmit = {
+    const ioDeviceData = {
       ...formData,
-      itDevice:
-        formData.itDevice && formData.itDevice.id !== ""
-          ? { id: formData.itDevice.id }
-          : null,
+      itDevice: formData.itDevice?.id ? { id: formData.itDevice.id } : null,
+      imageFile: undefined,
     };
 
-    console.log(JSON.stringify(formValuesToSubmit, null, 2));
-    onSubmit(formValuesToSubmit);
+    console.log(JSON.stringify(ioDeviceData, null, 2));
+    onSubmit({
+      ioDevice: ioDeviceData,
+      image: imageFile,
+    });
   };
 
   return (
@@ -119,22 +125,62 @@ const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      {/* Photo Section  */}
+      {/* Photo Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Foto del dispositivo TI</Form.Label>
+            <Form.Label>Foto del dispositivo</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="URL de la imagen (ejemplo: https://ejemplo.com/foto.jpg)"
-              defaultValue={mode === "update" ? readData?.image || "" : ""}
-              isInvalid={!!errors.image}
-              {...register("image")}
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => {
+                const file = e.target.files[0] || null;
+                setValue("imageFile", file);
+                setLocalImageFile(file);
+              }}
             />
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm mt-2"
+                onClick={() => {
+                  setValue("imageFile", null);
+                  setLocalImageFile(null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
+              >
+                Quitar imagen
+              </button>
+            )}
           </>
         }
-        leftError={errors.image?.message}
+        rightContent={
+          <>
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <div className="d-flex flex-column align-items-center mt-2">
+                <img
+                  src={
+                    localImageFile
+                      ? URL.createObjectURL(localImageFile)
+                      : readData.image.startsWith("http")
+                      ? readData.image
+                      : `http://localhost:9010${readData.image}`
+                  }
+                  alt="Vista previa de la foto del edificio"
+                  style={{
+                    maxWidth: "150px",
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                  }}
+                />
+              </div>
+            )}
+          </>
+        }
       />
 
       {/* Name and Brand section */}
@@ -295,12 +341,12 @@ const IODeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
               </option>
               {!isPendingHardwareSerie &&
                 !isErrorHardwareSerie &&
-                hardwareSerieReferences.data?.map((itDeviceSerie) => (
+                hardwareSerieReferences.data?.map((ioDeviceSerie) => (
                   <option
-                    key={itDeviceSerie.idHardwareSerie}
-                    value={itDeviceSerie.idHardwareSerie}
+                    key={ioDeviceSerie.idHardwareSerie}
+                    value={ioDeviceSerie.idHardwareSerie}
                   >
-                    {itDeviceSerie.serie}
+                    {ioDeviceSerie.serie}
                   </option>
                 ))}
             </Form.Select>

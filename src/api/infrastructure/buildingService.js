@@ -2,11 +2,24 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/api/building";
 
-export async function saveBuilding(building) {
+export async function saveBuilding({ building, image }) {
   const token = localStorage.getItem("jwtToken");
-  return await axios.post(API_URL, building, {
+
+  const formData = new FormData();
+
+  formData.append(
+    "building",
+    new Blob([JSON.stringify(building)], {
+      type: "application/json",
+    })
+  );
+
+  if (image) formData.append("image", image);
+
+  return await axios.post(API_URL, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 }
@@ -29,11 +42,26 @@ export async function findById(id) {
   });
 }
 
-export async function updateBuilding(building, id) {
+export async function updateBuilding({ building, image }, id) {
   const token = localStorage.getItem("jwtToken");
-  return await axios.put(`${API_URL}/${id}`, building, {
+
+  const formData = new FormData();
+
+  formData.append(
+    "building",
+    new Blob([JSON.stringify(building)], {
+      type: "application/json",
+    })
+  );
+
+  if (image && typeof image !== "string") {
+    formData.append("image", image);
+  }
+
+  return await axios.put(`${API_URL}/${id}`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 }

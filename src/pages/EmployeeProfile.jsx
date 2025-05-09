@@ -43,7 +43,7 @@ const EmployeeProfile = () => {
       <ContentFormSection
         windowWidth={windowWidth}
         contentHeader={
-          <h1 className="card-header-admin-register text-center text-primary">
+          <h1 className="card-header-admin-register text-center text-light">
             Perfil del Empleado
           </h1>
         }

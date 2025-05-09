@@ -7,10 +7,12 @@ import { RoomTypesEnum } from "../../data/enums/roomEnums";
 import { roomNumbers } from "../../data/constants/roomNumbers";
 import InventoryFormSection from "../InventoryFormSection";
 import useWindowWidth from "../hooks/useWindowWidth";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
+  const imageInputRef = useRef(null);
+  const [localImageFile, setLocalImageFile] = useState(null);
 
   const {
     register,
@@ -19,14 +21,14 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
     reset,
     getValues,
     control,
+    setValue,
   } = useForm();
 
-  // Reset form with initial data when in update mode
   useEffect(() => {
     if (mode === "update" && readData) {
       reset(readData);
     }
-  }, [mode, readData, reset]);
+  }, [mode, readData, reset, setValue]);
   const {
     isPending: isPendingBuilding,
     isError: isErrorBuilding,
@@ -59,9 +61,11 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
 
   const handleFormSubmit = () => {
     const formData = getValues();
+    const imageFile = formData.imageFile;
 
-    const formValuesToSubmit = {
+    const roomata = {
       ...formData,
+      imageFile: undefined,
       departments: (formData.departments || []).filter(
         (dept, index) =>
           (index === 0 ? dept?.id && dept.id !== "" : true) &&
@@ -69,8 +73,12 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
       ),
     };
 
-    console.log(JSON.stringify(formValuesToSubmit, null, 2));
-    onSubmit(formValuesToSubmit);
+    console.log(JSON.stringify(roomata, null, 2));
+
+    onSubmit({
+      room: roomata,
+      image: imageFile,
+    });
   };
 
   return (
@@ -86,17 +94,56 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
           <>
             <Form.Label>Foto de la sala/espacio</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Ejemplo: https://ejemplo.com/imagen-sala.jpg"
-              defaultValue={mode === "update" ? readData?.image || "" : ""}
-              isInvalid={!!errors.image}
-              {...register("image")}
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => {
+                const file = e.target.files[0] || null;
+                setValue("imageFile", file);
+                setLocalImageFile(file);
+              }}
             />
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm mt-2"
+                onClick={() => {
+                  setValue("imageFile", null);
+                  setLocalImageFile(null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
+              >
+                Quitar imagen
+              </button>
+            )}
           </>
         }
-        leftError={errors.image?.message}
+        rightContent={
+          <>
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <div className="d-flex flex-column align-items-center mt-2">
+                <img
+                  src={
+                    localImageFile
+                      ? URL.createObjectURL(localImageFile)
+                      : readData.image.startsWith("http")
+                      ? readData.image
+                      : `http://localhost:9000${readData.image}`
+                  }
+                  alt="Vista previa de la foto del edificio"
+                  style={{
+                    maxWidth: "150px",
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                  }}
+                />
+              </div>
+            )}
+          </>
+        }
       />
-
       {/* Room Type and Name Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -148,7 +195,6 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.name?.message}
       />
-
       {/* Room number and Max capacity */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -204,7 +250,6 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.capacityMax?.message}
       />
-
       {/* Building and Floor label */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -265,7 +310,6 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightError={errors.floorLabel?.message}
       />
-
       {/* Description */}
       <InventoryFormSection
         windowWidth={windowWidth}
@@ -291,7 +335,6 @@ const RoomForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         leftError={errors.description?.message}
       />
-
       {/* Departments */}
       <InventoryFormSection
         windowWidth={windowWidth}

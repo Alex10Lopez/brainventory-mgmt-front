@@ -9,6 +9,8 @@ const RoomView = ({ readData }) => {
 
   const roomData = readData;
 
+  const URL_IMAGE = "http://localhost:9000";
+
   return (
     <>
       <InventoryViewSection
@@ -16,11 +18,31 @@ const RoomView = ({ readData }) => {
         leftContent={
           <>
             <strong>Foto de la sala/espacio</strong>
-            <p>
-              {roomData.image || (
-                <span className="text-secondary">No disponible</span>
+            <div className="mt-2">
+              <img
+                src={
+                  roomData.image
+                    ? `${URL_IMAGE}${roomData.image}`
+                    : `${URL_IMAGE}/images/infrastructure/room.png`
+                }
+                alt={
+                  roomData.image
+                    ? "Foto del dispositivo"
+                    : "Imagen predeterminada de la sala/espacio"
+                }
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  borderRadius: "4px",
+                  opacity: roomData.image ? 1 : 0.6,
+                }}
+              />
+              {!roomData.image && (
+                <div className="text-secondary mt-1">
+                  Imagen predeterminada por falta de fotografía real.
+                </div>
               )}
-            </p>
+            </div>
           </>
         }
       />

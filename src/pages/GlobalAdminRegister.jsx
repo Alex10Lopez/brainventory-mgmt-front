@@ -33,7 +33,7 @@ const GlobalAdminRegister = () => {
     <ContentFormSection
       windowWidth={windowWidth}
       contentHeader={
-        <h1 className="card-header-admin-register text-center text-primary">
+        <h1 className="card-header-admin-register text-center text-light">
           Registro de Administrador Global
         </h1>
       }
@@ -43,17 +43,7 @@ const GlobalAdminRegister = () => {
           {isErrorMutation && (
             <div className="d-flex justify-content-center align-items-center">
               <Alert variant="danger" className="text-center" dismissible>
-                Error:{" "}
-                {error?.message
-                  ? "No se permite el registro. Ya existe un Administrador global."
-                  : "Ocurrió un error al guardar registro."}
-                <br />
-                {error?.response && (
-                  <>
-                    Respuesta del servidor:{" "}
-                    {JSON.stringify(error.response.data)}
-                  </>
-                )}
+                {error?.response && <>{JSON.stringify(error.response.data)}</>}
               </Alert>
             </div>
           )}

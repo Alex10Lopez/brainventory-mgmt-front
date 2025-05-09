@@ -19,12 +19,32 @@ const IODeviceView = ({ readData }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <strong>Foto del dispositivo</strong>
-            <p>
-              {ioDeviceData.image || (
-                <span className="text-secondary">No disponible</span>
+            <strong>Foto/imagen del dispositivo</strong>
+            <div className="mt-2">
+              <img
+                src={
+                  ioDeviceData.image
+                    ? `http://localhost:9010${ioDeviceData.image}`
+                    : "http://localhost:9010/images/assets/io-device.png"
+                }
+                alt={
+                  ioDeviceData.image
+                    ? "Foto del dispositivo"
+                    : "Imagen predeterminada del dispositivo"
+                }
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  borderRadius: "4px",
+                  opacity: ioDeviceData.image ? 1 : 0.6,
+                }}
+              />
+              {!ioDeviceData.image && (
+                <div className="text-secondary mt-1">
+                  Imagen predeterminada por falta de fotografía real.
+                </div>
               )}
-            </p>
+            </div>
           </>
         }
       />
@@ -137,7 +157,15 @@ const IODeviceView = ({ readData }) => {
           <>
             <strong>Fecha de compra</strong>
             <p>
-              {ioDeviceData.hardwareDetails?.purchaseDate || (
+              {ioDeviceData.hardwareDetails?.purchaseDate ? (
+                new Date(
+                  ioDeviceData.hardwareDetails.purchaseDate
+                ).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
             </p>
@@ -147,7 +175,15 @@ const IODeviceView = ({ readData }) => {
           <>
             <strong>Fin de garantía</strong>
             <p>
-              {ioDeviceData.hardwareDetails?.warrantyEndDate || (
+              {ioDeviceData.hardwareDetails?.warrantyEndDate ? (
+                new Date(
+                  ioDeviceData.hardwareDetails.warrantyEndDate
+                ).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
             </p>

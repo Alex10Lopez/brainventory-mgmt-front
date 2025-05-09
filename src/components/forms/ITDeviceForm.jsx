@@ -1,7 +1,7 @@
 import { Form, Alert } from "react-bootstrap";
 import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   findAllITDeviceNames,
   findAllHardwareBrands,
@@ -19,6 +19,8 @@ import { RoomTypesEnum } from "../../data/enums/roomEnums";
 
 const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
+  const imageInputRef = useRef(null);
+  const [localImageFile, setLocalImageFile] = useState(null);
 
   const {
     register,
@@ -26,6 +28,7 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
     formState: { errors },
     reset,
     getValues,
+    setValue,
     control,
   } = useForm();
 
@@ -34,7 +37,7 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
     if (mode === "update" && readData) {
       reset(readData);
     }
-  }, [mode, readData, reset]);
+  }, [mode, readData, reset, setValue]);
 
   const {
     isPending: isPendingITDeviceName,
@@ -100,8 +103,20 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
 
   const handleFormSubmit = () => {
     const formData = getValues();
-    console.log(JSON.stringify(formData, null, 2));
-    onSubmit(formData);
+    const imageFile = formData.imageFile;
+
+    const itDeviceData = {
+      ...formData,
+      room: formData.room?.id ? { id: formData.room.id } : null,
+      imageFile: undefined,
+    };
+
+    console.log(JSON.stringify(itDeviceData, null, 2));
+
+    onSubmit({
+      itDevice: itDeviceData,
+      image: imageFile,
+    });
   };
 
   return (
@@ -115,24 +130,57 @@ const ITDeviceForm = ({ mode = "create", readData = null, onSubmit }) => {
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Imagen del dispositivo</Form.Label>
+            <Form.Label>Foto del dispositivo</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="URL completa de la imagen (ejemplo: https://ejemplo.com/imagen.jpg)"
-              defaultValue={mode === "update" ? readData?.image || "" : ""}
-              isInvalid={!!errors.image}
-              {...register("image", {
-                pattern: {
-                  value:
-                    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?\.(jpg|jpeg|png|gif|webp)$/i,
-                  message:
-                    "Debe ser una URL válida de imagen (jpg, png, gif, webp)",
-                },
-              })}
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => {
+                const file = e.target.files[0] || null;
+                setValue("imageFile", file);
+                setLocalImageFile(file);
+              }}
             />
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm mt-2"
+                onClick={() => {
+                  setValue("imageFile", null);
+                  setLocalImageFile(null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
+              >
+                Quitar imagen
+              </button>
+            )}
           </>
         }
-        leftError={errors.image?.message}
+        rightContent={
+          <>
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <div className="d-flex flex-column align-items-center mt-2">
+                <img
+                  src={
+                    localImageFile
+                      ? URL.createObjectURL(localImageFile)
+                      : readData.image.startsWith("http")
+                      ? readData.image
+                      : `http://localhost:9010${readData.image}`
+                  }
+                  alt="Vista previa de la foto del edificio"
+                  style={{
+                    maxWidth: "150px",
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                  }}
+                />
+              </div>
+            )}
+          </>
+        }
       />
 
       {/* Name and Brand section */}

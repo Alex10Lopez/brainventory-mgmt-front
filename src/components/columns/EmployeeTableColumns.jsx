@@ -59,8 +59,38 @@ const EmployeeTableColumns = () => {
       id: "dateOfBirth",
       header: "Fecha de nacimiento",
       accessorKey: "dateOfBirth",
-      sortingFn: "datetime",
+      cell: ({ row }) => {
+        const value = row.getValue("dateOfBirth");
+        if (!value) return "-";
+
+        const date = new Date(value);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      },
+      sortingFn: (rowA, rowB, columnId) => {
+        const dateA = new Date(rowA.getValue(columnId));
+        const dateB = new Date(rowB.getValue(columnId));
+        return dateA.getTime() - dateB.getTime();
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const value = row.getValue(columnId);
+        if (!value) return false;
+
+        const date = new Date(value);
+        const formattedDate = `${String(date.getDate()).padStart(
+          2,
+          "0"
+        )}-${String(date.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}-${date.getFullYear()}`;
+
+        return formattedDate.includes(filterValue);
+      },
     },
+
     {
       id: "sex",
       header: "Sexo",

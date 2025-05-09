@@ -21,25 +21,8 @@ const EmployeeLogin = () => {
   } = useMutation({
     mutationFn: login,
     onSuccess: async (data) => {
-      const permissions = getFieldFromJwt("permissions");
-      const allowedPermissions = [
-        "GLOBAL_ADMIN",
-        "HR_ADMIN",
-        "ASSETS_ADMIN",
-        "INFRASTRUCTURE_ADMIN",
-      ];
-
-      const hasPermission = allowedPermissions.some(
-        (perm) => permissions && permissions.includes(perm)
-      );
-
-      if (hasPermission) {
-        await queryClient.invalidateQueries(["employeeLogin"]);
-        navigate("/");
-      } else {
-        localStorage.removeItem("jwtToken");
-        throw new Error("No tiene permisos para acceder al sistema");
-      }
+      await queryClient.invalidateQueries(["employeeLogin"]);
+      navigate("/");
     },
   });
 
@@ -51,7 +34,7 @@ const EmployeeLogin = () => {
     <ContentFormSection
       windowWidth={windowWidth}
       contentHeader={
-        <h1 className="card-header-admin-register text-center text-primary">
+        <h1 className="card-header-admin-register text-center text-light">
           Inicio de Sesión
         </h1>
       }
@@ -60,9 +43,11 @@ const EmployeeLogin = () => {
           {isErrorMutation && (
             <div className="d-flex justify-content-center align-items-center">
               <Alert variant="danger" className="text-center">
-                {error?.message === "No tiene permisos para acceder al sistema"
-                  ? "No tiene permisos para acceder al sistema"
-                  : "No se puedo iniciar sesión, compruebe su usuario y contraseña"}
+                {typeof error?.response?.data?.error === "string" ? (
+                  <>{JSON.stringify(error.response.data)}</>
+                ) : (
+                  "No se pudo iniciar sesión. Verifica las credenciales"
+                )}
               </Alert>
             </div>
           )}

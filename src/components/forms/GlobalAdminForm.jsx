@@ -101,55 +101,6 @@ const GlobalAdminForm = ({ onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      {/* Photo Section  */}
-      <InventoryFormSection
-        windowWidth={windowWidth}
-        leftContent={
-          <>
-            <Form.Label>Foto del empleado</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              ref={imageInputRef}
-              onChange={(e) => {
-                setValue("imageFile", e.target.files[0] || null);
-              }}
-            />
-            {formValues.imageFile && (
-              <button
-                type="button"
-                className="btn btn-outline-danger btn-sm mt-2"
-                onClick={() => {
-                  setValue("imageFile", null);
-                  if (imageInputRef.current) {
-                    imageInputRef.current.value = "";
-                  }
-                }}
-              >
-                Quitar imagen
-              </button>
-            )}
-          </>
-        }
-        rightContent={
-          <>
-            {formValues.imageFile && (
-              <div className="d-flex flex-column align-items-center mt-2">
-                <img
-                  src={URL.createObjectURL(formValues.imageFile)}
-                  alt="Vista previa de la foto"
-                  style={{
-                    maxWidth: "150px",
-                    maxHeight: "150px",
-                    borderRadius: "4px",
-                  }}
-                />
-              </div>
-            )}
-          </>
-        }
-      />
-
       {/* Name Section */}
       <InventoryFormSection
         windowWidth={windowWidth}

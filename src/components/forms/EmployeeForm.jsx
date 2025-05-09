@@ -10,7 +10,7 @@ import {
   StatusEnum,
 } from "../../data/enums/employeeEnums";
 import { findAllJobRole } from "../../api/humanResources/jobRoleService";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import InventoryFormSection from "../InventoryFormSection";
 import getFieldFromJwt from "../helpers/getFieldFromJwt";
@@ -18,6 +18,7 @@ import getFieldFromJwt from "../helpers/getFieldFromJwt";
 const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
   const imageInputRef = useRef(null);
+  const [localImageFile, setLocalImageFile] = useState(null);
 
   const permissions = getFieldFromJwt("permissions");
 
@@ -33,15 +34,6 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
 
   useEffect(() => {
     if (mode === "update" && readData) {
-      if (readData.image) {
-        fetch(readData.image)
-          .then((res) => res.blob())
-          .then((blob) => {
-            const file = new File([blob], "profile.jpg", { type: blob.type });
-            setValue("imageFile", file);
-          });
-      }
-
       const { password, ...dataWithoutPassword } = readData;
       reset(dataWithoutPassword);
 
@@ -153,7 +145,7 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      {/* Photo Section  */}
+      {/* Photo Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
@@ -164,15 +156,18 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
               accept="image/*"
               ref={imageInputRef}
               onChange={(e) => {
-                setValue("imageFile", e.target.files[0] || null);
+                const file = e.target.files[0] || null;
+                setValue("imageFile", file);
+                setLocalImageFile(file);
               }}
             />
-            {formValues.imageFile && (
+            {(localImageFile || (mode === "update" && readData?.image)) && (
               <button
                 type="button"
                 className="btn btn-outline-danger btn-sm mt-2"
                 onClick={() => {
                   setValue("imageFile", null);
+                  setLocalImageFile(null);
                   if (imageInputRef.current) {
                     imageInputRef.current.value = "";
                   }
@@ -185,10 +180,14 @@ const EmployeeForm = ({ mode = "create", readData = null, onSubmit }) => {
         }
         rightContent={
           <>
-            {formValues.imageFile && (
+            {(localImageFile || (mode === "update" && readData?.image)) && (
               <div className="d-flex flex-column align-items-center mt-2">
                 <img
-                  src={URL.createObjectURL(formValues.imageFile)}
+                  src={
+                    localImageFile
+                      ? URL.createObjectURL(localImageFile)
+                      : `http://localhost:8090${readData.image}`
+                  }
                   alt="Vista previa de la foto"
                   style={{
                     maxWidth: "150px",

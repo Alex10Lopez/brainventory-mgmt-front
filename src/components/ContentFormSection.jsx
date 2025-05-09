@@ -14,7 +14,7 @@ const ContentFormSection = ({
       <Card
         className={`bg-body-tertiary ${windowWidth < 768 ? "w-75" : "w-50"}`}
       >
-        <Card.Header>{contentHeader}</Card.Header>
+        <Card.Header className="bg-primary">{contentHeader}</Card.Header>
         <Card.Body>{contentBody}</Card.Body>
         <Card.Footer className="d-flex justify-content-center">
           {contentFooter}

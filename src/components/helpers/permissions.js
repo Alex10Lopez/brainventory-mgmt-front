@@ -39,7 +39,7 @@ export const hasAccessToRoute = (path) => {
     case "/":
     case "/login":
     case "/register":
-      return true; // Rutas públicas
+      return true;
     default:
       return false;
   }

@@ -13,6 +13,8 @@ const EmployeeView = ({ readData }) => {
 
   const employeeData = readData;
 
+  const URL_IMAGE = "http://localhost:8090";
+
   return (
     <>
       <InventoryViewSection
@@ -20,11 +22,31 @@ const EmployeeView = ({ readData }) => {
         leftContent={
           <>
             <strong>Foto del empleado</strong>
-            <p>
-              {employeeData.image || (
-                <span className="text-secondary">No disponible</span>
+            <div className="mt-2">
+              <img
+                src={
+                  employeeData.image
+                    ? `${URL_IMAGE}${employeeData.image}`
+                    : `${URL_IMAGE}/images/human-resources/employee.png`
+                }
+                alt={
+                  employeeData.image
+                    ? "Foto del dispositivo"
+                    : "Imagen predeterminada del empleado"
+                }
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  borderRadius: "4px",
+                  opacity: employeeData.image ? 1 : 0.6,
+                }}
+              />
+              {!employeeData.image && (
+                <div className="text-secondary mt-1">
+                  Imagen predeterminada por falta de fotografía real.
+                </div>
               )}
-            </p>
+            </div>
           </>
         }
       />
@@ -59,7 +81,13 @@ const EmployeeView = ({ readData }) => {
           <>
             <strong>Fecha de nacimiento</strong>
             <p>
-              {employeeData.dateOfBirth || (
+              {employeeData.dateOfBirth ? (
+                new Date(employeeData.dateOfBirth).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
             </p>

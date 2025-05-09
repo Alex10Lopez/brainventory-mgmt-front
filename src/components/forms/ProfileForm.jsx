@@ -18,11 +18,21 @@ const ProfileForm = ({ readData }) => {
         leftContent={
           <>
             <strong>Foto del empleado</strong>
-            <p>
-              {employeeData.image || (
+            <div className="mt-2">
+              {employeeData.image ? (
+                <img
+                  src={`http://localhost:8090${employeeData.image}`}
+                  alt="Foto del empleado"
+                  style={{
+                    maxWidth: "200px",
+                    maxHeight: "200px",
+                    borderRadius: "4px",
+                  }}
+                />
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
-            </p>
+            </div>
           </>
         }
       />
@@ -57,7 +67,13 @@ const ProfileForm = ({ readData }) => {
           <>
             <strong>Fecha de nacimiento</strong>
             <p>
-              {employeeData.dateOfBirth || (
+              {employeeData.dateOfBirth ? (
+                new Date(employeeData.dateOfBirth).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
             </p>

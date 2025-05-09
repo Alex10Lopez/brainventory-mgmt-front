@@ -1,18 +1,22 @@
-import { Alert, Container, Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Alert, Form } from "react-bootstrap";
+import { useForm, useWatch } from "react-hook-form";
 import useWindowWidth from "../hooks/useWindowWidth";
 import InventoryFormSection from "../InventoryFormSection";
 import countriesEs from "../../data/constants/countriesEs";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
   const windowWidth = useWindowWidth();
+  const imageInputRef = useRef(null);
+  const [localImageFile, setLocalImageFile] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
     reset,
+    setValue,
     getValues,
   } = useForm();
 
@@ -20,12 +24,21 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
     if (mode === "update" && readData) {
       reset(readData);
     }
-  }, [mode, readData, reset]);
+  }, [mode, readData, reset, setValue]);
 
   const handleFormSubmit = () => {
     const formData = getValues();
-    console.log(JSON.stringify(formData, null, 2));
-    onSubmit(formData);
+    const imageFile = formData.imageFile;
+
+    const buildingData = {
+      ...formData,
+      imageFile: undefined,
+    };
+
+    onSubmit({
+      building: buildingData,
+      image: imageFile,
+    });
   };
 
   return (
@@ -34,30 +47,70 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
       className="form-modal"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
-      {/* Photo Section  */}
+      {/* Photo Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
             <Form.Label>Foto del edificio</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="URL de la imagen (ejemplo: https://ejemplo.com/foto.jpg)"
-              defaultValue={mode === "update" ? readData?.image || "" : ""}
-              isInvalid={!!errors.image}
-              {...register("image")}
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              onChange={(e) => {
+                const file = e.target.files[0] || null;
+                setValue("imageFile", file);
+                setLocalImageFile(file);
+              }}
             />
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <button
+                type="button"
+                className="btn btn-outline-danger btn-sm mt-2"
+                onClick={() => {
+                  setValue("imageFile", null);
+                  setLocalImageFile(null);
+                  if (imageInputRef.current) {
+                    imageInputRef.current.value = "";
+                  }
+                }}
+              >
+                Quitar imagen
+              </button>
+            )}
           </>
         }
-        leftError={errors.image?.message}
+        rightContent={
+          <>
+            {(localImageFile || (mode === "update" && readData?.image)) && (
+              <div className="d-flex flex-column align-items-center mt-2">
+                <img
+                  src={
+                    localImageFile
+                      ? URL.createObjectURL(localImageFile)
+                      : readData.image.startsWith("http")
+                      ? readData.image
+                      : `http://localhost:9000${readData.image}`
+                  }
+                  alt="Vista previa de la foto del edificio"
+                  style={{
+                    maxWidth: "150px",
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                  }}
+                />
+              </div>
+            )}
+          </>
+        }
       />
 
-      {/* Name and Number of Floors Section  */}
+      {/* Name and Number of Floors Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <Form.Label>Nombre</Form.Label>
+            <Form.Label>Nombre del edificio</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ejemplo: Torre Empresarial Continental"
@@ -69,17 +122,17 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   message: "El nombre es obligatorio",
                 },
                 minLength: {
-                  value: 1,
-                  message: "El nombre debe tener al menos 1 caracteres",
+                  value: 2,
+                  message: "El nombre debe tener al menos 2 caracteres",
                 },
                 maxLength: {
-                  value: 50,
-                  message: "El nombre no puede exceder los 50 caracteres",
+                  value: 100,
+                  message: "El nombre no puede exceder los 100 caracteres",
                 },
                 pattern: {
-                  value: /^[\p{L}\d\s'-]+$/u,
+                  value: /^[\p{L}\d\s'\-.,()]+$/u,
                   message:
-                    "El nombre solo puede contener letras, números, espacios, guiones y apóstrofes",
+                    "Solo letras, números, espacios y caracteres especiales básicos",
                 },
               })}
             />
@@ -102,6 +155,10 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   value: 1,
                   message: "El edificio debe tener al menos 1 piso",
                 },
+                max: {
+                  value: 200,
+                  message: "El número máximo de pisos permitido es 200",
+                },
                 valueAsNumber: true,
                 validate: (value) =>
                   Number.isInteger(Number(value)) ||
@@ -113,7 +170,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
         rightError={errors.numberOfFloors?.message}
       />
 
-      {/* Description */}
+      {/* Description Section */}
       <InventoryFormSection
         windowWidth={windowWidth}
         leftContent={
@@ -130,7 +187,11 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
               {...register("description", {
                 maxLength: {
                   value: 500,
-                  message: "Máximo 500 caracteres permitidos",
+                  message: "La descripción no puede exceder los 500 caracteres",
+                },
+                pattern: {
+                  value: /^[\p{L}\d\s'\-.,;:()¡!¿?"#/@]+$/u,
+                  message: "La descripción contiene caracteres no permitidos",
                 },
               })}
             />
@@ -163,9 +224,9 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   message: "Máximo 100 caracteres",
                 },
                 pattern: {
-                  value: /^[\p{L}\d\s.,'-]+$/u,
+                  value: /^[\p{L}\d\s.,'\-()/]+$/u,
                   message:
-                    "La calle solo puede contener letras, números, espacios, puntos, comas, guiones o apóstrofes",
+                    "Solo letras, números, espacios y caracteres especiales básicos",
                 },
               })}
             />
@@ -190,9 +251,9 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   message: "Máximo 20 caracteres",
                 },
                 pattern: {
-                  value: /^[\p{L}\d\s/-]+$/u,
+                  value: /^[\p{L}\d\s\-/#]+$/u,
                   message:
-                    "El número solo puede contener letras, números, espacios, guiones o '/'",
+                    "Solo letras, números, espacios, guiones y caracteres especiales básicos",
                 },
               })}
             />
@@ -254,7 +315,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   message: "Máximo 50 caracteres",
                 },
                 pattern: {
-                  value: /^[\p{L}\s'-]+$/u,
+                  value: /^[\p{L}\s'\-]+$/u,
                   message: "Solo letras, espacios, guiones o apóstrofes",
                 },
               })}
@@ -288,7 +349,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   message: "Máximo 50 caracteres",
                 },
                 pattern: {
-                  value: /^[\p{L}\s'-]+$/u,
+                  value: /^[\p{L}\s'\-]+$/u,
                   message: "Solo letras, espacios, guiones o apóstrofes",
                 },
               })}
@@ -345,7 +406,7 @@ const BuildingForm = ({ mode = "create", readData = null, onSubmit }) => {
                   message: "Máximo 250 caracteres",
                 },
                 pattern: {
-                  value: /^[\p{L}\d\s.,;:()'"¡!¿?\-#\/]+$/u,
+                  value: /^[\p{L}\d\s.,;:()'"¡!¿?\-#/@]+$/u,
                   message: "Solo texto común: letras, números y signos básicos",
                 },
               })}

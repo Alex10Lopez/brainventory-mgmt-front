@@ -13,18 +13,40 @@ const ITDeviceView = ({ readData }) => {
 
   const itDeviceData = readData;
 
+  const URL_IMAGE = "http://localhost:9010";
+
   return (
     <>
       <InventoryViewSection
         windowWidth={windowWidth}
         leftContent={
           <>
-            <strong>Imagen del dispositivo</strong>
-            <p>
-              {itDeviceData.image || (
-                <span className="text-secondary">No disponible</span>
+            <strong>Foto/imagen del dispositivo</strong>
+            <div className="mt-2">
+              <img
+                src={
+                  itDeviceData.image
+                    ? `${URL_IMAGE}${itDeviceData.image}`
+                    : `${URL_IMAGE}/images/assets/it-device.png`
+                }
+                alt={
+                  itDeviceData.image
+                    ? "Foto del dispositivo"
+                    : "Imagen predeterminada del dispositivo"
+                }
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "200px",
+                  borderRadius: "4px",
+                  opacity: itDeviceData.image ? 1 : 0.6,
+                }}
+              />
+              {!itDeviceData.image && (
+                <div className="text-secondary mt-1">
+                  Imagen predeterminada por falta de fotografía real.
+                </div>
               )}
-            </p>
+            </div>
           </>
         }
       />
@@ -137,7 +159,15 @@ const ITDeviceView = ({ readData }) => {
           <>
             <strong>Fecha de compra</strong>
             <p>
-              {itDeviceData.hardwareDetails?.purchaseDate || (
+              {itDeviceData.hardwareDetails?.purchaseDate ? (
+                new Date(
+                  itDeviceData.hardwareDetails.purchaseDate
+                ).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
             </p>
@@ -147,7 +177,15 @@ const ITDeviceView = ({ readData }) => {
           <>
             <strong>Fin de garantía</strong>
             <p>
-              {itDeviceData.hardwareDetails?.warrantyEndDate || (
+              {itDeviceData.hardwareDetails?.warrantyEndDate ? (
+                new Date(
+                  itDeviceData.hardwareDetails.warrantyEndDate
+                ).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              ) : (
                 <span className="text-secondary">No disponible</span>
               )}
             </p>

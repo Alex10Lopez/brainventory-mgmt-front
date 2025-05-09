@@ -7,8 +7,6 @@ export async function saveEmployee({ employee, image }) {
 
   const formData = new FormData();
 
-  console.log("Datos recibidos:", { employee, image });
-
   formData.append(
     "employee",
     new Blob([JSON.stringify(employee)], {
@@ -16,19 +14,7 @@ export async function saveEmployee({ employee, image }) {
     })
   );
 
-  if (image) {
-    formData.append("image", image);
-    console.log("Imagen adjuntada:", image.name, image.type);
-  }
-
-  console.log("Contenido de FormData:");
-  for (let [key, value] of formData.entries()) {
-    if (key === "employee") {
-      value.text().then((text) => console.log(key, text));
-    } else {
-      console.log(key, value);
-    }
-  }
+  if (image) formData.append("image", image);
 
   return await axios.post(API_URL, formData, {
     headers: {
@@ -64,8 +50,6 @@ export async function updateEmployee({ employee, image }, id) {
 
   const formData = new FormData();
 
-  console.log("Datos recibidos:", { employee, image });
-
   formData.append(
     "employee",
     new Blob([JSON.stringify(employee)], {
@@ -75,15 +59,6 @@ export async function updateEmployee({ employee, image }, id) {
 
   if (image && typeof image !== "string") {
     formData.append("image", image);
-  }
-
-  console.log("Contenido de FormData:");
-  for (let [key, value] of formData.entries()) {
-    if (key === "employee") {
-      value.text().then((text) => console.log(key, text));
-    } else {
-      console.log(key, value);
-    }
   }
 
   return await axios.put(`${API_URL}/${id}`, formData, {

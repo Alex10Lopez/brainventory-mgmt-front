@@ -2,11 +2,24 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/api/io-device";
 
-export async function saveIODevice(ioDevice) {
+export async function saveIODevice({ ioDevice, image }) {
   const token = localStorage.getItem("jwtToken");
-  return await axios.post(API_URL, ioDevice, {
+
+  const formData = new FormData();
+
+  formData.append(
+    "ioDevice",
+    new Blob([JSON.stringify(ioDevice)], {
+      type: "application/json",
+    })
+  );
+
+  if (image) formData.append("image", image);
+
+  return await axios.post(API_URL, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 }
@@ -29,11 +42,26 @@ export async function findById(id) {
   });
 }
 
-export async function updateIODevice(ioDevice, id) {
+export async function updateIODevice({ ioDevice, image }, id) {
   const token = localStorage.getItem("jwtToken");
-  return await axios.put(`${API_URL}/${id}`, ioDevice, {
+
+  const formData = new FormData();
+
+  formData.append(
+    "ioDevice",
+    new Blob([JSON.stringify(ioDevice)], {
+      type: "application/json",
+    })
+  );
+
+  if (image && typeof image !== "string") {
+    formData.append("image", image);
+  }
+
+  return await axios.put(`${API_URL}/${id}`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 }
